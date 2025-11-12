@@ -2,7 +2,7 @@ package net.grewind.dsds;
 
 import java.util.Objects;
 
-public class Game {
+public class Game implements Comparable<Game> {
     private final int number;
     private final String name;
 
@@ -38,5 +38,10 @@ public class Game {
     @Override
     public int hashCode() {
         return Objects.hash(number, name);
+    }
+
+    @Override
+    public int compareTo(Game o) {
+        return Integer.compare(this.number, o.number);
     }
 }

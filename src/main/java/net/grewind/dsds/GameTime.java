@@ -22,7 +22,10 @@ public class GameTime {
         long minutes = Long.parseLong(matcher.group(2));
         long seconds = Long.parseLong(matcher.group(3));
         return hours * 3600 + minutes * 60 + seconds;
+    }
 
+    public static String secondsToHours(long seconds) {
+        return String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
     }
 
     public long getSeconds() {
