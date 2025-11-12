@@ -113,6 +113,7 @@ public class Main {
                             boolean endHere = false;
                             if (endHere) {
                                 SaveUtil.saveProgress(winningStatistics);
+                                return;
                             }
 
                             debug();
