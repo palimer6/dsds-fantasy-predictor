@@ -110,6 +110,10 @@ public class Main {
                             } else {
                                 debug();
                             }
+                            boolean endHere = false;
+                            if (endHere) {
+                                SaveUtil.saveProgress(winningStatistics);
+                            }
 
                             debug();
                         }
@@ -285,61 +289,6 @@ public class Main {
         }
 
         return new Result(standings, ranking);
-    }
-
-    private static class Result {
-
-        private final Map<FormEntry, Long> standings;
-        private final List<String> ranking;
-
-        public Result(Map<FormEntry, Long> standings, List<String> ranking) {
-            this.standings = standings;
-            this.ranking = ranking;
-        }
-
-        public Map<FormEntry, Long> getStandings() {
-            return standings;
-        }
-
-        public List<String> getRanking() {
-            return ranking;
-        }
-
-    }
-
-    private static class WinningStatistic {
-
-        private final String winner;
-        private final Map<Game, Long> min = new TreeMap<>();
-        private final Map<Game, Long> max = new TreeMap<>();
-
-        public WinningStatistic(String winner, Map<Game, Long> checks) {
-            this.winner = winner;
-            checks.forEach((game, aLong) -> {
-                min.put(game, aLong);
-                max.put(game, aLong);
-            });
-        }
-
-        public String getWinner() {
-            return winner;
-        }
-
-        public Map<Game, Long> getMin() {
-            return min;
-        }
-
-        public Map<Game, Long> getMax() {
-            return max;
-        }
-
-        @Override
-        public String toString() {
-            StringJoiner joiner = new StringJoiner(",");
-            min.keySet().forEach(game -> joiner.add(game.getNumber() + " " + min.get(game) + "-" + max.get(game)));
-            return "winner: " + winner + ";" + joiner;
-        }
-
     }
 
     private static void printStuff(int num, long current, long max, int gap) {
