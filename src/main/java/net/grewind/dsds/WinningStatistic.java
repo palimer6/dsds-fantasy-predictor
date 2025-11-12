@@ -18,6 +18,12 @@ public class WinningStatistic {
         });
     }
 
+    public WinningStatistic(String winner, Map<Game, Long> min, Map<Game, Long> max) {
+        this.winner = winner;
+        this.min.putAll(min);
+        this.max.putAll(max);
+    }
+
     public String getWinner() {
         return winner;
     }
@@ -28,6 +34,15 @@ public class WinningStatistic {
 
     public Map<Game, Long> getMax() {
         return max;
+    }
+
+    public boolean isTracked(Map<Game, Long> checks) {
+        for (Game game : checks.keySet()) {
+            if (checks.get(game) < this.min.get(game) || checks.get(game) > this.max.get(game)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 public class Main {
     private static final double MAX_CALC_MODIFIER = 1;
     private static final double MIN_CALC_MODIFIER = 1;
+    private static boolean ONLY_SKIPPED = true;
 
     public static void main(String[] args) {
         FormEntry shasta = getOfficialTimes();
@@ -18,7 +19,7 @@ public class Main {
         Set<Game> exclude = shasta.getGuesses().keySet();
         Map<Game, Long> maxCalculationTimes = getMaxCalculationTimes(guesses, exclude);
         Map<Game, Long> minCalculationTimes = getMinCalculationTimes(guesses, exclude);
-        List<WinningStatistic> winningStatistics = new ArrayList<>();
+        List<WinningStatistic> winningStatistics = SaveUtil.loadProgress(maxCalculationTimes.keySet());
 
         Game game325 = maxCalculationTimes.keySet().stream().filter(game -> game.getNumber() == 325).findFirst().get();
         Game game326 = maxCalculationTimes.keySet().stream().filter(game -> game.getNumber() == 326).findFirst().get();
@@ -32,17 +33,36 @@ public class Main {
         long max328 = maxCalculationTimes.get(game328);
         long max329 = maxCalculationTimes.get(game329);
 
-        for (long g329 = minCalculationTimes.get(game329); g329 < max329; g329++) {
+        for (long g329 = minCalculationTimes.get(game329); g329 <= max329; g329++) {
             printStuff(329, g329, max329, 1);
-            for (long g328 = minCalculationTimes.get(game328); g328 < max328; g328++) {
+            for (long g328 = minCalculationTimes.get(game328); g328 <= max328; g328++) {
                 printStuff(328, g328, max328, 1);
-                for (long g327 = 60437; g327 < max327; g327++) {
+                for (long g327 = 60437; g327 <= max327; g327++) {
                     printStuff(327, g327, max327, 1);
-                    for (long g326 = minCalculationTimes.get(game326); g326 < max326; g326++) {
-                        printStuff(326, g326, max326, 10);
-                        for (long g325 = minCalculationTimes.get(game325); g325 < max325; g325++) {
-                            Map<Game, Long> officialResults = new LinkedHashMap<>(shasta.getGuesses());
+                    for (long g326 = minCalculationTimes.get(game326); g326 <= max326; g326++) {
+                        printStuff(326, g326, max326, 1000);
+                        for (long g325 = minCalculationTimes.get(game325); g325 <= max325; g325++) {
+                            boolean endHere = false;
+                            if (!ONLY_SKIPPED && endHere) {
+                                SaveUtil.saveProgress(winningStatistics);
+                                return;
+                            }
+
                             Map<Game, Long> checks = Map.of(game325, g325, game326, g326, game327, g327, game328, g328, game329, g329);
+                            boolean skip = false;
+                            for (WinningStatistic winningStatistic : winningStatistics) {
+                                if (winningStatistic.isTracked(checks)) {
+                                    skip = true;
+                                    break;
+                                }
+                            }
+                            if (skip) {
+                                continue;
+                            } else if (ONLY_SKIPPED) {
+                                ONLY_SKIPPED = false;
+                            }
+
+                            Map<Game, Long> officialResults = new LinkedHashMap<>(shasta.getGuesses());
                             officialResults.putAll(checks);
 
 
@@ -109,11 +129,6 @@ public class Main {
                                 winningStatistics.add(new WinningStatistic(winner, checks));
                             } else {
                                 debug();
-                            }
-                            boolean endHere = false;
-                            if (endHere) {
-                                SaveUtil.saveProgress(winningStatistics);
-                                return;
                             }
 
                             debug();
@@ -292,9 +307,13 @@ public class Main {
         return new Result(standings, ranking);
     }
 
+    private static long lastPrint = System.currentTimeMillis();
+
     private static void printStuff(int num, long current, long max, int gap) {
         if (current % gap == 0) {
-            System.out.println(num + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + (current * 100) / max + "%");
+            long now = System.currentTimeMillis();
+            System.out.println(num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + (current * 100) / max + "% (" + (now - lastPrint) + "ms) " + ONLY_SKIPPED);
+            lastPrint = now;
         }
     }
 
