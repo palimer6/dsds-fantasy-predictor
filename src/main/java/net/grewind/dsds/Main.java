@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class Main {
     private static final double MAX_CALC_MODIFIER = 1;
     private static final double MIN_CALC_MODIFIER = 1;
-    private static boolean ONLY_SKIPPED = true;
+    private static long NOT_SKIPPED = 0;
 
     public static void main(String[] args) {
         FormEntry shasta = getOfficialTimes();
@@ -43,7 +43,7 @@ public class Main {
                         printStuff(326, g326, max326, 1000);
                         for (long g325 = minCalculationTimes.get(game325); g325 <= max325; g325++) {
                             boolean endHere = false;
-                            if (!ONLY_SKIPPED && endHere) {
+                            if (NOT_SKIPPED > 0 && endHere) {
                                 SaveUtil.saveProgress(winningStatistics);
                                 return;
                             }
@@ -58,8 +58,8 @@ public class Main {
                             }
                             if (skip) {
                                 continue;
-                            } else if (ONLY_SKIPPED) {
-                                ONLY_SKIPPED = false;
+                            } else {
+                                NOT_SKIPPED++;
                             }
 
                             Map<Game, Long> officialResults = new LinkedHashMap<>(shasta.getGuesses());
@@ -67,7 +67,7 @@ public class Main {
 
 
                             Result result = getResult(guesses, new FormEntry(-1, "Calc", officialResults));
-                            String winner = result.getRanking().get(0);
+                            String winner = result.getWinner();
 
                             boolean addNew = true;
                             for (WinningStatistic winningStatistic : winningStatistics) {
@@ -283,28 +283,20 @@ public class Main {
         return minCalculationTimes;
     }
 
-    private static Result getResult(List<FormEntry> entries, FormEntry officialEntry) {
-        Map<FormEntry, Long> standings = new HashMap<>();
-        for (FormEntry entry : entries) {
-            entry.getGuesses().forEach((game, gameTime) -> {
-                Long official = officialEntry.getGuesses().get(game);
-                if (official == null) {
-                    return;
-                }
-                long abs = Math.abs(gameTime - official);
-                standings.merge(entry, abs, Long::sum);
-            });
-        }
-        Map<FormEntry, Long> standingsCopy = new HashMap<>(standings);
-        List<String> ranking = new ArrayList<>();
-        while (!standingsCopy.isEmpty()) {
-            Map.Entry<FormEntry, Long> best = standingsCopy.entrySet().stream()
-                    .reduce((e1, e2) -> e1.getValue() < e2.getValue() ? e1 : e2).get();
-            ranking.add(best.getKey().getUsername());
-            standingsCopy.remove(best.getKey());
-        }
+    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
 
-        return new Result(standings, ranking);
+    private static Result getResult(List<FormEntry> entries, FormEntry officialEntry) {
+        for (FormEntry entry : entries) {
+            for (Map.Entry<Game, Long> guessEntry : entry.getGuesses().entrySet()) {
+                Long official = officialEntry.getGuesses().get(guessEntry.getKey());
+                if (official == null) {
+                    continue;
+                }
+                long abs = Math.abs(guessEntry.getValue() - official);
+                entry.setDifference(entry.getDifference()+abs);
+            }
+        }
+        return new Result(new TreeSet<>(entries));
     }
 
     private static long lastPrint = System.currentTimeMillis();
@@ -312,7 +304,7 @@ public class Main {
     private static void printStuff(int num, long current, long max, int gap) {
         if (current % gap == 0) {
             long now = System.currentTimeMillis();
-            System.out.println(num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + (current * 100) / max + "% (" + (now - lastPrint) + "ms) " + ONLY_SKIPPED);
+            System.out.println(num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + (current * 100) / max + "% (" + (now - lastPrint) + "ms) " + NOT_SKIPPED);
             lastPrint = now;
         }
     }

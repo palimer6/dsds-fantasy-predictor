@@ -1,22 +1,19 @@
 package net.grewind.dsds;
 
-import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
 
 public class Result {
-    private final Map<FormEntry, Long> standings;
-    private final List<String> ranking;
+    private final SortedSet<FormEntry> standings;
 
-    public Result(Map<FormEntry, Long> standings, List<String> ranking) {
+    public Result(SortedSet<FormEntry> standings) {
         this.standings = standings;
-        this.ranking = ranking;
     }
 
-    public Map<FormEntry, Long> getStandings() {
+    public SortedSet<FormEntry> getStandings() {
         return standings;
     }
 
-    public List<String> getRanking() {
-        return ranking;
+    public String getWinner() {
+        return this.standings.getFirst().getUsername();
     }
 }
