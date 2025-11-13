@@ -39,7 +39,6 @@ public class FormEntry implements Comparable<FormEntry> {
         return "FormEntry{" +
                 "entryNumber=" + entryNumber +
                 ", username='" + username + '\'' +
-                ", guesses=" + guesses +
                 ", difference=" + difference +
                 '}';
     }

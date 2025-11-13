@@ -14,6 +14,8 @@ public class Main {
     private static long NOT_SKIPPED = 0;
 
     public static void main(String[] args) {
+        Set<String> winners = new HashSet<>();
+
         FormEntry shasta = getOfficialTimes();
         List<FormEntry> guesses = getGuesses();
         Set<Game> exclude = shasta.getGuesses().keySet();
@@ -40,27 +42,27 @@ public class Main {
                 for (long g327 = 60437; g327 <= max327; g327++) {
                     printStuff(327, g327, max327, 1);
                     for (long g326 = minCalculationTimes.get(game326); g326 <= max326; g326++) {
-                        printStuff(326, g326, max326, 1000);
+                        printStuff(326, g326, max326, 10);
                         for (long g325 = minCalculationTimes.get(game325); g325 <= max325; g325++) {
-                            boolean endHere = false;
-                            if (NOT_SKIPPED > 0 && endHere) {
-                                SaveUtil.saveProgress(winningStatistics);
-                                return;
-                            }
+//                            boolean endHere = false;
+//                            if (NOT_SKIPPED > 0 && endHere) {
+//                                SaveUtil.saveProgress(winningStatistics);
+//                                return;
+//                            }
 
                             Map<Game, Long> checks = Map.of(game325, g325, game326, g326, game327, g327, game328, g328, game329, g329);
-                            boolean skip = false;
-                            for (WinningStatistic winningStatistic : winningStatistics) {
-                                if (winningStatistic.isTracked(checks)) {
-                                    skip = true;
-                                    break;
-                                }
-                            }
-                            if (skip) {
-                                continue;
-                            } else {
-                                NOT_SKIPPED++;
-                            }
+//                            boolean skip = false;
+//                            for (WinningStatistic winningStatistic : winningStatistics) {
+//                                if (winningStatistic.isTracked(checks)) {
+//                                    skip = true;
+//                                    break;
+//                                }
+//                            }
+//                            if (skip) {
+//                                continue;
+//                            } else {
+//                                NOT_SKIPPED++;
+//                            }
 
                             Map<Game, Long> officialResults = new LinkedHashMap<>(shasta.getGuesses());
                             officialResults.putAll(checks);
@@ -68,6 +70,19 @@ public class Main {
 
                             Result result = getResult(guesses, new FormEntry(-1, "Calc", officialResults));
                             String winner = result.getWinner();
+
+                            // temp
+                            if (!winners.contains(winner)) {
+                                System.out.println("New Winner: " + winner);
+                                winners.add(winner);
+                                for (FormEntry guess : guesses) {
+                                    guess.setDifference(0);
+                                }
+                                continue;
+                            }
+                            if (true) {
+                                continue;
+                            }
 
                             boolean addNew = true;
                             for (WinningStatistic winningStatistic : winningStatistics) {
@@ -293,7 +308,7 @@ public class Main {
                     continue;
                 }
                 long abs = Math.abs(guessEntry.getValue() - official);
-                entry.setDifference(entry.getDifference()+abs);
+                entry.setDifference(entry.getDifference() + abs);
             }
         }
         return new Result(new TreeSet<>(entries));
