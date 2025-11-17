@@ -6,81 +6,70 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ManualMain {
-    private static final long SECOND_GAP = TimeUnit.MINUTES.toSeconds(30);
+    private static final long SECOND_GAP = TimeUnit.MINUTES.toSeconds(3);
 
     public static void main(String[] args) {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();
         Map<WinnerName, List<WinningTimes>> winners = new HashMap<>();
         Map<Set<String>, Long> winnerCounts = new HashMap<>();
+        Map<WinnerName, Map.Entry<Long, Long>> winningSegments = new HashMap<>();
+        long fullCount = 0;
 
-        long min1 = userGuesses.stream().mapToLong(UserGuess::getGuess1).min().getAsLong();
-        min1 = min1 - min1 % SECOND_GAP;
-        long min2 = userGuesses.stream().mapToLong(UserGuess::getGuess2).min().getAsLong();
-        min2 = min2 - min2 % SECOND_GAP;
-        long min3 = userGuesses.stream().mapToLong(UserGuess::getGuess3).min().getAsLong();
-        min3 = min3 - min3 % SECOND_GAP;
-        long min4 = userGuesses.stream().mapToLong(UserGuess::getGuess4).min().getAsLong();
-        min4 = min4 - min4 % SECOND_GAP;
-        long min5 = userGuesses.stream().mapToLong(UserGuess::getGuess5).min().getAsLong();
-        min5 = min5 - min5 % SECOND_GAP;
+        long min325 = userGuesses.stream().mapToLong(UserGuess::getGuess325).min().getAsLong();
+        min325 = min325 - min325 % SECOND_GAP;
+        long min328 = userGuesses.stream().mapToLong(UserGuess::getGuess328).min().getAsLong();
+        min328 = min328 - min328 % SECOND_GAP;
+        long min329 = userGuesses.stream().mapToLong(UserGuess::getGuess329).min().getAsLong();
+        min329 = min329 - min329 % SECOND_GAP;
 
-        long max1 = userGuesses.stream().mapToLong(UserGuess::getGuess1).max().getAsLong();
-        max1 = max1 - max1 % SECOND_GAP + SECOND_GAP;
-        long max2 = userGuesses.stream().mapToLong(UserGuess::getGuess2).max().getAsLong();
-        max2 = max2 - max2 % SECOND_GAP + SECOND_GAP;
-        long max3 = userGuesses.stream().mapToLong(UserGuess::getGuess3).max().getAsLong();
-        max3 = max3 - max3 % SECOND_GAP + SECOND_GAP;
-        long max4 = userGuesses.stream().mapToLong(UserGuess::getGuess4).max().getAsLong();
-        max4 = max4 - max4 % SECOND_GAP + SECOND_GAP;
-        long max5 = userGuesses.stream().mapToLong(UserGuess::getGuess5).max().getAsLong();
-        max5 = max5 - max5 % SECOND_GAP + SECOND_GAP;
+        long max325 = userGuesses.stream().mapToLong(UserGuess::getGuess325).max().getAsLong();
+        max325 = max325 - max325 % SECOND_GAP + SECOND_GAP;
+        long max328 = userGuesses.stream().mapToLong(UserGuess::getGuess328).max().getAsLong();
+        max328 = max328 - max328 % SECOND_GAP + SECOND_GAP;
+        long max329 = userGuesses.stream().mapToLong(UserGuess::getGuess329).max().getAsLong();
+        max329 = max329 - max329 % SECOND_GAP + SECOND_GAP;
 
-        for (long g5 = min5; g5 <= max5; g5 += SECOND_GAP) {
-            printStuff(5, g5, min5, max5, SECOND_GAP);
-            for (long g4 = min4; g4 <= max4; g4 += SECOND_GAP) {
+        for (long g329 = min329; g329 <= max329; g329 += SECOND_GAP) {
+            printStuff(5, g329, min329, max329, SECOND_GAP);
+            for (long g328 = min328; g328 <= max328; g328 += SECOND_GAP) {
 //                printStuff(4, g4,min4, max4, SECOND_GAP);
-                for (long g3 = min3; g3 <= max3; g3 += SECOND_GAP) {
-//                    printStuff(3, g3,min4, max3, SECOND_GAP * 10);
-                    for (long g2 = min2; g2 <= max2; g2 += SECOND_GAP) {
-//                        printStuff(2, g2,min2, max2, SECOND_GAP * 100);
-//                        System.out.println(g2 + "/" + max2);
-                        for (long g1 = min1; g1 <= max1; g1 += SECOND_GAP) {
-                            long currentBest = Long.MAX_VALUE;
-                            WinnerName winnerSet = new WinnerName();
-                            for (UserGuess userGuess : userGuesses) {
-                                long difference = userGuess.getCurrentDifference() +
-                                        Math.abs(g1 - userGuess.getGuess1()) +
-                                        Math.abs(g2 - userGuess.getGuess2()) +
-                                        Math.abs(g3 - userGuess.getGuess3()) +
-                                        Math.abs(g4 - userGuess.getGuess4()) +
-                                        Math.abs(g5 - userGuess.getGuess5());
-                                if (currentBest > difference) {
-                                    currentBest = difference;
-                                    winnerSet.clear();
-                                    winnerSet.add(userGuess.getUserName());
-                                } else if (currentBest == difference) {
-                                    winnerSet.add(userGuess.getUserName());
-                                }
-                            }
-
-                            if (winnerCounts.containsKey(winnerSet)) {
-                                winnerCounts.put(winnerSet, winnerCounts.get(winnerSet) + 1);
-                            } else {
-                                winnerCounts.put(winnerSet, 1L);
-//                                System.out.println("New winner: " + winnerSet);
-                            }
-
-                            if (winners.containsKey(winnerSet)) {
-                                winners.get(winnerSet).add(new WinningTimes(g1, g2, g3, g4, g5));
-                            } else {
-                                List<WinningTimes> list = new ArrayList<>();
-                                list.add(new WinningTimes(g1, g2, g3, g4, g5));
-                                winners.put(winnerSet, list);
-                                System.out.println("New winner: " + winnerSet);
-                            }
+                for (long g325 = min325; g325 <= max325; g325 += SECOND_GAP) {
+                    long currentBest = Long.MAX_VALUE;
+                    WinnerName winnerSet = new WinnerName();
+                    for (UserGuess userGuess : userGuesses) {
+                        long difference = userGuess.getCurrentDifference() +
+                                Math.abs(g325 - userGuess.getGuess325()) +
+                                Math.abs(g328 - userGuess.getGuess328()) +
+                                Math.abs(g329 - userGuess.getGuess329());
+                        if (currentBest > difference) {
+                            currentBest = difference;
+                            winnerSet.clear();
+                            winnerSet.add(userGuess.getUserName());
+                        } else if (currentBest == difference) {
+                            winnerSet.add(userGuess.getUserName());
                         }
                     }
+
+                    if (winnerCounts.containsKey(winnerSet)) {
+                        winnerCounts.put(winnerSet, winnerCounts.get(winnerSet) + 1);
+                    } else {
+                        winnerCounts.put(winnerSet, 1L);
+//                                System.out.println("New winner: " + winnerSet);
+                    }
+
+                    if (winners.containsKey(winnerSet)) {
+                        winners.get(winnerSet).add(new WinningTimes(g325, g328, g329));
+                    } else {
+                        List<WinningTimes> list = new ArrayList<>();
+                        list.add(new WinningTimes(g325, g328, g329));
+                        winners.put(winnerSet, list);
+                        System.out.println("New winner: " + winnerSet);
+                    }
+
+                    fullCount++;
                 }
+
+
             }
         }
 

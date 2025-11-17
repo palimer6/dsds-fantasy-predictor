@@ -8,8 +8,8 @@ import java.util.List;
 
 public class WinningTimes extends ArrayList<Long> {
 
-    public WinningTimes(long g1, long g2, long g3, long g4, long g5) {
-        super(List.of(g1, g2, g3, g4, g5));
+    public WinningTimes(long g325, long g328, long g329) {
+        super(List.of(g325, g328, g329));
     }
 
     @Override

@@ -24,21 +24,17 @@ public class InitializeUserGuesses {
             int entryNumber = Integer.parseInt(cells[0]);
             String userName = cells[2];
             long current = GameTime.parseTime(cells[4]);
-            long guess1 = 0, guess2 = 0, guess3 = 0, guess4 = 0, guess5 = 0;
+            long guess325 = 0, guess2 = 0, guess3 = 0, guess328 = 0, guess329 = 0;
             for (int j = 37; j < cells.length; j += 2) {
                 if (j == 37) {
-                    guess1 = GameTime.parseTime(cells[j]);
-                } else if (j == 39) {
-                    guess2 = GameTime.parseTime(cells[j]);
-                } else if (j == 41) {
-                    guess3 = GameTime.parseTime(cells[j]);
+                    guess325 = GameTime.parseTime(cells[j]);
                 } else if (j == 43) {
-                    guess4 = GameTime.parseTime(cells[j]);
+                    guess328 = GameTime.parseTime(cells[j]);
                 } else if (j == 45) {
-                    guess5 = GameTime.parseTime(cells[j]);
+                    guess329 = GameTime.parseTime(cells[j]);
                 }
             }
-            UserGuess userGuess = new UserGuess(entryNumber, userName, current, guess1, guess2, guess3, guess4, guess5);
+            UserGuess userGuess = new UserGuess(entryNumber, userName, current, guess325, guess328, guess329);
             userGuesses.add(userGuess);
         }
         return userGuesses;
