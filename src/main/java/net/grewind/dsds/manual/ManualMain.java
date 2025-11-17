@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ManualMain {
-    private static final long SECOND_GAP = TimeUnit.MINUTES.toSeconds(3);
+    private static final long SECOND_GAP = TimeUnit.MINUTES.toSeconds(2);
 
     public static void main(String[] args) {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();
