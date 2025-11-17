@@ -12,8 +12,9 @@ public class ManualMain {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();
         Map<WinnerName, List<WinningTimes>> winners = new HashMap<>();
         Map<Set<String>, Long> winnerCounts = new HashMap<>();
-        Map<WinnerName, Map.Entry<Long, Long>> winningSegments = new HashMap<>();
+        Map<WinnerName, List<Map.Entry<Long, Long>>> winningSegments = new HashMap<>();
         long fullCount = 0;
+        WinnerName lastWinner = null;
 
         long min325 = userGuesses.stream().mapToLong(UserGuess::getGuess325).min().getAsLong();
         min325 = min325 - min325 % SECOND_GAP;
@@ -48,6 +49,47 @@ public class ManualMain {
                         } else if (currentBest == difference) {
                             winnerSet.add(userGuess.getUserName());
                         }
+                    }
+
+                    if (lastWinner == null) {
+                        List<Map.Entry<Long, Long>> spans = new ArrayList<>();
+//                        Map.Entry<Long, Long> span = Map.entry(fullCount, -1L);
+                        Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
+                        spans.add(span);
+                        winningSegments.put(winnerSet, spans);
+                        lastWinner = winnerSet;
+                    } else if (!lastWinner.equals(winnerSet)) {
+                        List<Map.Entry<Long, Long>> lastWinnerSpans = winningSegments.get(lastWinner);
+                        boolean hasOpen = false;
+                        Map.Entry<Long, Long> openSpan = null;
+                        for (Map.Entry<Long, Long> span : lastWinnerSpans) {
+                            if (span.getValue() == -1) {
+                                hasOpen = true;
+                                openSpan = span;
+                            }
+                        }
+                        if (hasOpen) {
+                            openSpan.setValue(fullCount - 1);
+                        } else {
+                            throw new IllegalStateException();
+                        }
+
+
+                        List<Map.Entry<Long, Long>> spans;
+                        if (winningSegments.containsKey(winnerSet)) {
+                            spans = winningSegments.get(winnerSet);
+                        } else {
+                            spans = new ArrayList<>();
+                        }
+
+                        Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
+                        spans.add(span);
+                        winningSegments.put(winnerSet, spans);
+
+
+                        lastWinner = winnerSet;
+                    } else {
+                        System.out.print("");
                     }
 
                     if (winnerCounts.containsKey(winnerSet)) {
