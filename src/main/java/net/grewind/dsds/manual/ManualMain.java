@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ManualMain {
-    private static final long SECOND_GAP = TimeUnit.MINUTES.toSeconds(2);
+    private static final long SECOND_GAP = TimeUnit.SECONDS.toSeconds(1);
 
     public static void main(String[] args) {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();
@@ -33,11 +33,18 @@ public class ManualMain {
         long max329 = userGuesses.stream().mapToLong(UserGuess::getGuess329).max().getAsLong();
         max329 = max329 - max329 % SECOND_GAP + SECOND_GAP;
 
-        for (long g329 = min329; g329 <= max329; g329 += SECOND_GAP) {
+        long span325 = ((max325 + SECOND_GAP) - min325) / SECOND_GAP;
+        long span328 = ((max328 + SECOND_GAP) - min328) / SECOND_GAP;
+        long span329 = ((max329 + SECOND_GAP) - min329) / SECOND_GAP;
+
+        for (long i329 = 0; i329 < span329; i329++) {
+            long g329 = min329 + i329 * SECOND_GAP;
             printStuff(5, g329, min329, max329, SECOND_GAP);
-            for (long g328 = min328; g328 <= max328; g328 += SECOND_GAP) {
-//                printStuff(4, g328, min328, max328, SECOND_GAP);
-                for (long g325 = min325; g325 <= max325; g325 += SECOND_GAP) {
+            for (long i328 = 0; i328 < span328; i328++) {
+                long g328 = min328 + i328 * SECOND_GAP;
+                printStuff(4, g328, min328, max328, SECOND_GAP*1000);
+                for (long i325 = 0; i325 < span325; i325++) {
+                    long g325 = min325 + i325 * SECOND_GAP;
                     long currentBest = Long.MAX_VALUE;
                     WinnerName winnerSet = new WinnerName();
                     for (UserGuess userGuess : userGuesses) {
@@ -51,9 +58,15 @@ public class ManualMain {
                             winnerSet.add(userGuess.getUserName());
                         } else if (currentBest == difference) {
                             winnerSet.add(userGuess.getUserName());
+                            System.out.println(winnerSet);
+                            printStuff(325,g325,min325,max325,1);
+                            printStuff(328,g328,min328,max328,1);
+                            printStuff(329,g329,min329,max329,1);
                         }
                     }
-
+                    if (true) {
+                        continue;
+                    }
                     if (lastWinner == null) {
                         List<Map.Entry<Long, Long>> spans = new ArrayList<>();
 //                        Map.Entry<Long, Long> span = Map.entry(fullCount, -1L);
@@ -121,14 +134,17 @@ public class ManualMain {
 
             }
         }
+        if (true) {
+            return;
+        }
         long rows = winningSegments.values().stream()
                 .mapToLong(List::size).sum();
         System.out.println(rows);
-        StringBuilder builder = new StringBuilder("winner\tfrom\tto");
+        StringBuilder builder = new StringBuilder("winner;from;to");
         for (Map.Entry<WinnerName, List<Map.Entry<Long, Long>>> entry : winningSegments.entrySet()) {
             for (Map.Entry<Long, Long> span : entry.getValue()) {
                 builder.append("\n");
-                builder.append(entry.getKey()).append("\t").append(span.getKey()).append("\t").append(span.getValue());
+                builder.append(entry.getKey()).append(";").append(span.getKey()).append(";").append(span.getValue());
             }
         }
         try {
