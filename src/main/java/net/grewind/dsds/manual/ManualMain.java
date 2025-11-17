@@ -2,6 +2,9 @@ package net.grewind.dsds.manual;
 
 import net.grewind.dsds.GameTime;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +36,7 @@ public class ManualMain {
         for (long g329 = min329; g329 <= max329; g329 += SECOND_GAP) {
             printStuff(5, g329, min329, max329, SECOND_GAP);
             for (long g328 = min328; g328 <= max328; g328 += SECOND_GAP) {
-//                printStuff(4, g4,min4, max4, SECOND_GAP);
+//                printStuff(4, g328, min328, max328, SECOND_GAP);
                 for (long g325 = min325; g325 <= max325; g325 += SECOND_GAP) {
                     long currentBest = Long.MAX_VALUE;
                     WinnerName winnerSet = new WinnerName();
@@ -92,14 +95,16 @@ public class ManualMain {
                         System.out.print("");
                     }
 
-                    if (winnerCounts.containsKey(winnerSet)) {
+                   /* if (winnerCounts.containsKey(winnerSet)) {
                         winnerCounts.put(winnerSet, winnerCounts.get(winnerSet) + 1);
                     } else {
                         winnerCounts.put(winnerSet, 1L);
 //                                System.out.println("New winner: " + winnerSet);
                     }
 
-                    if (winners.containsKey(winnerSet)) {
+                    */
+
+                    /*if (winners.containsKey(winnerSet)) {
                         winners.get(winnerSet).add(new WinningTimes(g325, g328, g329));
                     } else {
                         List<WinningTimes> list = new ArrayList<>();
@@ -108,14 +113,29 @@ public class ManualMain {
                         System.out.println("New winner: " + winnerSet);
                     }
 
+                     */
+
                     fullCount++;
                 }
 
 
             }
         }
-
-        System.out.println();
+        long rows = winningSegments.values().stream()
+                .mapToLong(List::size).sum();
+        System.out.println(rows);
+        StringBuilder builder = new StringBuilder("winner\tfrom\tto");
+        for (Map.Entry<WinnerName, List<Map.Entry<Long, Long>>> entry : winningSegments.entrySet()) {
+            for (Map.Entry<Long, Long> span : entry.getValue()) {
+                builder.append("\n");
+                builder.append(entry.getKey()).append("\t").append(span.getKey()).append("\t").append(span.getValue());
+            }
+        }
+        try {
+            Files.writeString(Path.of("paste-into-sheets.csv"), builder.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static long lastPrint = System.currentTimeMillis();
