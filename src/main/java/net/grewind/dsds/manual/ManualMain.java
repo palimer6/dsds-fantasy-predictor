@@ -16,6 +16,7 @@ public class ManualMain {
         Map<WinnerName, List<WinningTimes>> winners = new HashMap<>();
         Map<Set<String>, Long> winnerCounts = new HashMap<>();
         Map<WinnerName, List<Map.Entry<Long, Long>>> winningSegments = new HashMap<>();
+        Set<WinnerName> winnerNames = new HashSet<>();
         long fullCount = 0;
         WinnerName lastWinner = null;
 
@@ -37,14 +38,14 @@ public class ManualMain {
         long span328 = ((max328 + SECOND_GAP) - min328) / SECOND_GAP;
         long span329 = ((max329 + SECOND_GAP) - min329) / SECOND_GAP;
 
-        for (long i329 = 0; i329 < span329; i329++) {
-            long g329 = min329 + i329 * SECOND_GAP;
-            printStuff(5, g329, min329, max329, SECOND_GAP);
+        for (long i325 = 0; i325 < span325; i325++) {
+            long g325 = min325 + i325 * SECOND_GAP;
+            printStuff(5, g325, min325, max325, SECOND_GAP);
             for (long i328 = 0; i328 < span328; i328++) {
                 long g328 = min328 + i328 * SECOND_GAP;
-                printStuff(4, g328, min328, max328, SECOND_GAP*1000);
-                for (long i325 = 0; i325 < span325; i325++) {
-                    long g325 = min325 + i325 * SECOND_GAP;
+                printStuff(4, g328, min328, max328, SECOND_GAP * 1000);
+                for (long i329 = 0; i329 < span329; i329++) {
+                    long g329 = min329 + i329 * SECOND_GAP;
                     long currentBest = Long.MAX_VALUE;
                     WinnerName winnerSet = new WinnerName();
                     for (UserGuess userGuess : userGuesses) {
@@ -58,15 +59,29 @@ public class ManualMain {
                             winnerSet.add(userGuess.getUserName());
                         } else if (currentBest == difference) {
                             winnerSet.add(userGuess.getUserName());
-                            System.out.println(winnerSet);
-                            printStuff(325,g325,min325,max325,1);
-                            printStuff(328,g328,min328,max328,1);
-                            printStuff(329,g329,min329,max329,1);
                         }
                     }
-                    if (true) {
-                        continue;
-                    }
+//                    if (true) {
+//                        if (winnerSet.size() > 1) {
+//                           if (winnerSet.size()> 2) {
+//                                System.out.println("WOAH!!!");
+//                                System.out.println(winnerSet);
+//                                printStuff(325, g325, min325, max325, 1);
+//                                printStuff(328, g328, min328, max328, 1);
+//                                printStuff(329, g329, min329, max329, 1);
+//                            }
+//                            winnerCounts.merge(winnerSet, 1L, Long::sum);
+//                            int oldSize = winnerNames.size();
+//                            winnerNames.add(winnerSet);
+//                            if (winnerNames.size() > oldSize) {
+//                                System.out.println(winnerSet);
+//                                printStuff(325, g325, min325, max325, 1);
+//                                printStuff(328, g328, min328, max328, 1);
+//                                printStuff(329, g329, min329, max329, 1);
+//                            }
+//                        }
+//                        continue;
+//                    }
                     if (lastWinner == null) {
                         List<Map.Entry<Long, Long>> spans = new ArrayList<>();
 //                        Map.Entry<Long, Long> span = Map.entry(fullCount, -1L);
@@ -105,7 +120,7 @@ public class ManualMain {
 
                         lastWinner = winnerSet;
                     } else {
-                        System.out.print("");
+                        debug();
                     }
 
                    /* if (winnerCounts.containsKey(winnerSet)) {
@@ -134,9 +149,10 @@ public class ManualMain {
 
             }
         }
-        if (true) {
-            return;
-        }
+//        if (true) {
+//            System.out.println(winnerCounts);
+//            return;
+//        }
         long rows = winningSegments.values().stream()
                 .mapToLong(List::size).sum();
         System.out.println(rows);
@@ -162,5 +178,8 @@ public class ManualMain {
             System.out.println(num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + ((current - min) * 100) / (max - min) + "% (" + (now - lastPrint) + "ms)");
             lastPrint = now;
         }
+    }
+
+    private static void debug() {
     }
 }

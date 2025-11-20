@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class InitializeUserGuesses {
     public static List<UserGuess> initialize() {
@@ -37,6 +38,9 @@ public class InitializeUserGuesses {
             UserGuess userGuess = new UserGuess(entryNumber, userName, current, guess325, guess328, guess329);
             userGuesses.add(userGuess);
         }
+        Set<String> possibleWinners = Set.of("zambrini213", "palimer6", "IllegallySam", "galaxy178", "teddyras",
+                "ECGreem", "positiveiona", "Awe / awestrikernova", "WickBRSTM", "driabwb ", "Naked_Tonberry");
+        userGuesses.removeIf(userGuess -> !possibleWinners.contains(userGuess.getUserName()));
         return userGuesses;
     }
 }
