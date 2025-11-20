@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AddBigArray {
-    private static final long SECOND_GAP = TimeUnit.SECONDS.toSeconds(30);
+    private static final long SECOND_GAP = TimeUnit.SECONDS.toSeconds(15);
 
     public static void main(String[] args) {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();

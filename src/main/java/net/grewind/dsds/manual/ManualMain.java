@@ -13,12 +13,13 @@ public class ManualMain {
 
     public static void main(String[] args) {
         List<UserGuess> userGuesses = InitializeUserGuesses.initialize();
-        Map<WinnerName, List<WinningTimes>> winners = new HashMap<>();
-        Map<Set<String>, Long> winnerCounts = new HashMap<>();
-        Map<WinnerName, List<Map.Entry<Long, Long>>> winningSegments = new HashMap<>();
-        Set<WinnerName> winnerNames = new HashSet<>();
+//        Map<WinnerName, List<WinningTimes>> winners = new HashMap<>();
+//        Map<Set<String>, Long> winnerCounts = new HashMap<>();
+//        Map<WinnerName, List<Map.Entry<Long, Long>>> winningSegments = new HashMap<>();
+        Map<Integer, List<Map.Entry<Long, Long>>> binaryWinnerSegments = new HashMap<>();
+//        Set<WinnerName> winnerNames = new HashSet<>();
         long fullCount = 0;
-        WinnerName lastWinner = null;
+        int lastWinner = 0;
 
         long min325 = userGuesses.stream().mapToLong(UserGuess::getGuess325).min().getAsLong();
         min325 = min325 - min325 % SECOND_GAP;
@@ -47,7 +48,7 @@ public class ManualMain {
                 for (long i329 = 0; i329 < span329; i329++) {
                     long g329 = min329 + i329 * SECOND_GAP;
                     long currentBest = Long.MAX_VALUE;
-                    WinnerName winnerSet = new WinnerName();
+                    int winnerMap = 0;
                     for (UserGuess userGuess : userGuesses) {
                         long difference = userGuess.getCurrentDifference() +
                                 Math.abs(g325 - userGuess.getGuess325()) +
@@ -55,10 +56,10 @@ public class ManualMain {
                                 Math.abs(g329 - userGuess.getGuess329());
                         if (currentBest > difference) {
                             currentBest = difference;
-                            winnerSet.clear();
-                            winnerSet.add(userGuess.getUserName());
+                            winnerMap = 0;
+                            winnerMap |= (0b1 << (userGuess.getEntryNumber()));
                         } else if (currentBest == difference) {
-                            winnerSet.add(userGuess.getUserName());
+                            winnerMap |= (0b1 << (userGuess.getEntryNumber()));
                         }
                     }
 //                    if (true) {
@@ -82,15 +83,15 @@ public class ManualMain {
 //                        }
 //                        continue;
 //                    }
-                    if (lastWinner == null) {
+                    if (lastWinner == 0) {
                         List<Map.Entry<Long, Long>> spans = new ArrayList<>();
 //                        Map.Entry<Long, Long> span = Map.entry(fullCount, -1L);
                         Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
                         spans.add(span);
-                        winningSegments.put(winnerSet, spans);
-                        lastWinner = winnerSet;
-                    } else if (!lastWinner.equals(winnerSet)) {
-                        List<Map.Entry<Long, Long>> lastWinnerSpans = winningSegments.get(lastWinner);
+                        binaryWinnerSegments.put(winnerMap, spans);
+                        lastWinner = winnerMap;
+                    } else if (lastWinner != winnerMap) {
+                        List<Map.Entry<Long, Long>> lastWinnerSpans = binaryWinnerSegments.get(lastWinner);
                         boolean hasOpen = false;
                         Map.Entry<Long, Long> openSpan = null;
                         for (Map.Entry<Long, Long> span : lastWinnerSpans) {
@@ -107,18 +108,19 @@ public class ManualMain {
 
 
                         List<Map.Entry<Long, Long>> spans;
-                        if (winningSegments.containsKey(winnerSet)) {
-                            spans = winningSegments.get(winnerSet);
+                        if (binaryWinnerSegments.containsKey(winnerMap)) {
+                            spans = binaryWinnerSegments.get(winnerMap);
                         } else {
                             spans = new ArrayList<>();
+                            System.out.printf("New winner:%8x %n", winnerMap);
                         }
 
                         Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
                         spans.add(span);
-                        winningSegments.put(winnerSet, spans);
+                        binaryWinnerSegments.put(winnerMap, spans);
 
 
-                        lastWinner = winnerSet;
+                        lastWinner = winnerMap;
                     } else {
                         debug();
                     }
@@ -153,14 +155,15 @@ public class ManualMain {
 //            System.out.println(winnerCounts);
 //            return;
 //        }
-        long rows = winningSegments.values().stream()
+        long rows = binaryWinnerSegments.values().stream()
                 .mapToLong(List::size).sum();
         System.out.println(rows);
         StringBuilder builder = new StringBuilder("winner;from;to");
-        for (Map.Entry<WinnerName, List<Map.Entry<Long, Long>>> entry : winningSegments.entrySet()) {
+        for (Map.Entry<Integer, List<Map.Entry<Long, Long>>> entry : binaryWinnerSegments.entrySet()) {
             for (Map.Entry<Long, Long> span : entry.getValue()) {
                 builder.append("\n");
-                builder.append(entry.getKey()).append(";").append(span.getKey()).append(";").append(span.getValue());
+                builder.append(String.format("%8x", entry.getKey()))
+                        .append(";").append(span.getKey()).append(";").append(span.getValue());
             }
         }
         try {
