@@ -30,6 +30,10 @@ function updateMax(value, targetRange) {
     }
 };
 
+function addMarker(value, userName, datalist) {
+    datalist.append('<option value="' + value + '" label="' + secondsToTime(value) + '"></option>');
+};
+
 function addRow(player) {
     $('#playerTableBody').append(
         '<tr class="player-row" data-player="' + player.entryNumber + '">' +
@@ -166,10 +170,13 @@ $(document).ready(function() {
     for (const player of players) {
         updateMin(player.seconds325(), $('#range325'));
         updateMax(player.seconds325(), $('#range325'));
+        addMarker(player.seconds325(), player.userName, $('#list325'));
         updateMin(player.seconds328(), $('#range328'));
         updateMax(player.seconds328(), $('#range328'));
+        addMarker(player.seconds328(), player.userName, $('#list328'));
         updateMin(player.seconds329(), $('#range329'));
         updateMax(player.seconds329(), $('#range329'));
+        addMarker(player.seconds329(), player.userName, $('#list329'));
         addRow(player);
     }
     updateLabel($('#range325').val(), $('#time325'));

@@ -1,11 +1,6 @@
 <script src="js/jquery-3.7.1.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-<!--<link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css"></link>-->
-<!--<script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script src="js/script.js"></script>
 <link rel="stylesheet" href="css/style.css">
 <html>
@@ -14,24 +9,27 @@
 <div class="m-3 p-1">
     <div class="row">
         <span id="time325" class="col-2 col-md-1"></span>
-        <label for="range325" class="form-label col-auto">#325 - Spyro: Shadow Legacy:</label>
+        <label for="range325" class="form-label col-auto">#325 - Spyro: Shadow Legacy</label>
     </div>
     <div class="row">
-        <input type="range" class="form-range time-range" id="range325">
+        <input type="range" class="form-range time-range" id="range325" list="list325">
+        <datalist id="list325"></datalist>
     </div>
     <div class="row">
         <span id="time328" class="col-2 col-md-1"></span>
-        <label for="range328" class="form-label col-auto">#328 - Dragon Ball Z: Attack of the Saiyans:</label>
+        <label for="range328" class="form-label col-auto">#328 - Dragon Ball Z: Attack of the Saiyans</label>
     </div>
     <div class="row">
-        <input type="range" class="form-range time-range" id="range328">
+        <input type="range" class="form-range time-range" id="range328" list="list328">
+        <datalist id="list328"></datalist>
     </div>
     <div class="row">
         <span id="time329" class="col-2 col-md-1"></span>
-        <label for="range329" class="form-label col-auto">#329 - Exit DS:</label>
+        <label for="range329" class="form-label col-auto">#329 - Exit DS</label>
     </div>
     <div class="row">
-        <input type="range" class="form-range time-range" id="range329">
+        <input type="range" class="form-range time-range" id="range329" list="list329">
+        <datalist id="list329"></datalist>
     </div>
 </div>
 <table id="playerTable" class="table table-striped table-hover table-bordered">
