@@ -9,15 +9,15 @@
 }
 
 tr.player-row:has(td.cell-rank[data-rank="1"]) td {
-    background-color: gold;
+    background-color: color-mix(in srgb, gold, transparent 30%);
 }
 
 tr.player-row:has(td.cell-rank[data-rank="2"]) td {
-    background-color: silver;
+    background-color: color-mix(in srgb, silver, transparent 30%);
 }
 
 tr.player-row:has(td.cell-rank[data-rank="3"]) td {
-    background-color: #CD7F32;
+    background-color: color-mix(in srgb, #CD7F32, transparent 30%);
 }
 
 tr.player-row.highlighted {
@@ -27,4 +27,23 @@ tr.player-row.highlighted {
 
 .hidden-col {
     visibility: collapse;
+}
+
+.float {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+}
+
+.transparent {
+    opacity: 50%;
+    transition: opacity .2s ease-out;
+    -moz-transition: opacity .2s ease-out;
+    -webkit-transition: opacity .2s ease-out;
+    -o-transition: opacity .2s ease-out;
+}
+
+.transparent:hover {
+    opacity: 100%;
 }
