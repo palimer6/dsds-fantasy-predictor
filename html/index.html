@@ -6,7 +6,7 @@
         crossorigin="anonymous"></script>
 <!--<link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css"></link>-->
 <!--<script src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>-->
-<script>
+<script src="js/script.js">
     function timeToSeconds(time) {
         let regex = /(\d{1,2}):(\d{2}):(\d{2})/g;
         let arr = regex.exec(time);
@@ -41,8 +41,8 @@
 
     function addRow(player) {
         $('#playerTableBody').append(
-            '<tr data-player="' + player.entryNumber + '">' + 
-			'<td class="cell-rank"></td>' + 
+            '<tr data-player="' + player.entryNumber + '">' +
+			'<td class="cell-rank"></td>' +
 			'<td class="cell-entry">' + player.entryNumber + '</td>' +
 			'<td class="cell-user-name">' + player.userName + '</td>' +
 			'<td class="cell-difference"></td>' +
@@ -52,6 +52,16 @@
 			'<td class="cell-game-329"></td>' +
 			'</tr>');
     };
+
+	function updateScores(game) {
+		let value = $('#range' + game).val();
+		for (const player of players) {
+			let method = player['seconds' + game];
+			let methodReturn = player['seconds' + game]();
+			let score = Math.abs(value - methodReturn);
+			$('tr[data-player="' + player.entryNumber + '"] td.cell-game-' + game).val(score).html(secondsToTime(score));
+		}
+	};
 
     function Player(entryNumber, userName, current, guess325, guess328, guess329) {
         this.entryNumber = entryNumber;
@@ -73,6 +83,7 @@
          return timeToSeconds(this.guess329);
         };
     };
+
     let players = [];
     players.push(new Player(1, "pmcTRILOGY", "37:44:53", "4:00:00", "22:00:00", "25:00:00"));
     players.push(new Player(2, "Inestimate", "53:11:28", "4:27:00", "27:27:27", "28:05:00"));
@@ -116,17 +127,23 @@
         updateLabel($('#range325').val(), $('#time325'));
         updateLabel($('#range328').val(), $('#time328'));
         updateLabel($('#range329').val(), $('#time329'));
+		updateScores('325');
+		updateScores('328');
+		updateScores('329');
 
         $('#range325').on('input', function() {
             updateLabel($(this).val(), $('#time325'));
+			updateScores('325');
         });
 
         $('#range328').on('input', function() {
             updateLabel($(this).val(), $('#time328'));
+			updateScores('328');
         });
 
         $('#range329').on('input', function() {
             updateLabel($(this).val(), $('#time329'));
+			updateScores('329');
         });
     });
 </script>
@@ -134,11 +151,11 @@
 <head><title>DSDS Fantasy Predictor</title></head>
 <body>
 <label for="range325" class="form-label">Game 325: <span id="time325"></span></label>
-<input type="range" class="form-range" id="range325">
+<input type="range" class="form-range time-range" id="range325">
 <label for="range328" class="form-label">Game 328: <span id="time328"></span></label>
-<input type="range" class="form-range" id="range328">
+<input type="range" class="form-range time-range" id="range328">
 <label for="range329" class="form-label">Game 329: <span id="time329"></span></label>
-<input type="range" class="form-range" id="range329">
+<input type="range" class="form-range time-range" id="range329">
 <table id="playerTable">
     <thead>
     <tr>
