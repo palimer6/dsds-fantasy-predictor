@@ -7,3 +7,15 @@
 .duplicate-rank td {
     background-color: rgba(0,255,255,0.25);
 }
+
+tr.player-row:has(td.cell-rank[data-rank="1"]) td {
+    background-color: gold;
+}
+
+tr.player-row:has(td.cell-rank[data-rank="2"]) td {
+    background-color: silver;
+}
+
+tr.player-row:has(td.cell-rank[data-rank="3"]) td {
+    background-color: #CD7F32;
+}
