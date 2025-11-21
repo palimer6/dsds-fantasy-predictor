@@ -72,7 +72,7 @@ function updateTotals() {
         let total = current + g325 + g328 + g329;
         $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
     });
-}
+};
 
 function sortTable() {
     let switching = true;
@@ -96,9 +96,12 @@ function sortTable() {
             switching = true;
         }
     }
-}
+};
+
+let duplicateRanks = new Set();
 
 function updateRanks() {
+    duplicateRanks.clear();
     let i = 1;
     let sameCount = 0;
     let lastTotal = 0;
@@ -106,6 +109,7 @@ function updateRanks() {
         let total = Number($(this).find('td.cell-total').attr('data-seconds'));
         if (total === lastTotal) {
             sameCount++;
+            duplicateRanks.add(i - sameCount);
         } else {
             sameCount = 0;
         }
@@ -113,7 +117,20 @@ function updateRanks() {
         $(this).find('td.cell-rank').attr('data-rank', i - sameCount).html(i - sameCount);
         i++;
     });
-}
+};
+
+function checkDuplicateRanks() {
+    $('#playerTableBody tr.player-row').removeClass('duplicate-rank');
+    if (duplicateRanks.size === 0) {
+        return;
+    }
+    $('#playerTableBody tr.player-row').each(function () {
+        let rank = Number($(this).find('td.cell-rank').attr('data-rank'));
+        if (duplicateRanks.has(rank)) {
+            $(this).addClass('duplicate-rank');
+        }
+    });
+};
 
 function Player(entryNumber, userName, current, guess325, guess328, guess329) {
     this.entryNumber = entryNumber;
@@ -188,6 +205,7 @@ $(document).ready(function() {
 	updateTotals();
 	sortTable();
 	updateRanks();
+	checkDuplicateRanks();
 
     $('#range325').on('input', function() {
         updateLabel($(this).val(), $('#time325'));
@@ -195,6 +213,7 @@ $(document).ready(function() {
 		updateTotals();
 		sortTable();
 		updateRanks();
+		checkDuplicateRanks();
     });
 
     $('#range328').on('input', function() {
@@ -203,6 +222,7 @@ $(document).ready(function() {
 		updateTotals();
         sortTable();
         updateRanks();
+        checkDuplicateRanks();
     });
 
     $('#range329').on('input', function() {
@@ -211,6 +231,7 @@ $(document).ready(function() {
 		updateTotals();
         sortTable();
         updateRanks();
+        checkDuplicateRanks();
     });
 
 //    $('#range325').val(13950).trigger('input');

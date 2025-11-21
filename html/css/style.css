@@ -3,3 +3,7 @@
     -moz-appearance: auto;
     appearance: auto;
 }
+
+.duplicate-rank td {
+    background-color: rgba(0,255,255,0.25);
+}
