@@ -40,14 +40,14 @@ function addRow(player) {
 		'<td class="cell-rank text-end"></td>' +
 		'<!--td class="cell-entry text-end">' + player.entryNumber + '</td-->' +
 		'<td class="cell-user-name">' + player.userName + '</td>' +
-		'<td class="cell-total text-end"></td>' +
+		'<td class="cell-total text-end">00:00:00</td>' +
 		'<td class="cell-current text-end" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
 		'<td class="cell-guess-325 text-end">' + player.guess325 + '</td>' +
-		'<td class="cell-game-325 text-end"></td>' +
+		'<td class="cell-game-325 text-end">0:00:00</td>' +
 		'<td class="cell-guess-328 text-end">' + player.guess328 + '</td>' +
-		'<td class="cell-game-328 text-end"></td>' +
+		'<td class="cell-game-328 text-end">0:00:00</td>' +
 		'<td class="cell-guess-329 text-end">' + player.guess329 + '</td>' +
-		'<td class="cell-game-329 text-end"></td>' +
+		'<td class="cell-game-329 text-end">0:00:00</td>' +
 		'<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
 		'</tr>');
 };
@@ -75,7 +75,7 @@ function updateTotals() {
     });
 };
 
-function sortTable() {
+function sortTable(cellClass = 'cell-total') {
     let switching = true;
     while (switching) {
         switching = false;
@@ -84,8 +84,8 @@ function sortTable() {
         let rows = $('#playerTableBody tr.player-row');
         for (i = 0; i < (rows.length - 1); i++) {
             shouldSwitch = false;
-            let currentTotal = Number(rows.eq(i).find('td.cell-total').attr('data-seconds'));
-            let nextTotal = Number(rows.eq(i + 1).find('td.cell-total').attr('data-seconds'));
+            let currentTotal = Number(rows.eq(i).find('td.' + cellClass).attr('data-seconds'));
+            let nextTotal = Number(rows.eq(i + 1).find('td.' + cellClass).attr('data-seconds'));
 
             if (currentTotal > nextTotal) {
                 shouldSwitch = true;
@@ -197,16 +197,30 @@ $(document).ready(function() {
         addMarker(player.seconds329(), player.userName, $('#list329'));
         addRow(player);
     }
-    updateLabel($('#range325').val(), $('#time325'));
-    updateLabel($('#range328').val(), $('#time328'));
-    updateLabel($('#range329').val(), $('#time329'));
-	updateScores('325', false);
-	updateScores('328', false);
-	updateScores('329', false);
-	updateTotals();
-	sortTable();
-	updateRanks();
-	checkDuplicateRanks();
+//    $('#range325').val(13950).trigger('input');
+//    $('#range328').val(80650).trigger('input');
+//    $('#range329').val(42755).trigger('input');
+    $('#range325').val(0);
+    $('#range328').val(0);
+    $('#range329').val(0);
+    sortTable('cell-current');
+    updateRanks();
+    checkDuplicateRanks();
+
+    let firstInput = true;
+    $('.time-range').on('input', function() {
+        if (firstInput) {
+            firstInput = false;
+            updateLabel($('#range325').val(), $('#time325'));
+            updateLabel($('#range328').val(), $('#time328'));
+            updateLabel($('#range329').val(), $('#time329'));
+            updateScores('325', false);
+            updateScores('328', false);
+            updateScores('329', false);
+            updateTotals();
+        }
+    });
+
 
     $('#range325').on('input', function() {
         updateLabel($(this).val(), $('#time325'));
@@ -256,8 +270,4 @@ $(document).ready(function() {
             $(this).parent().addClass('highlighted');
         }
     });
-
-//    $('#range325').val(13950).trigger('input');
-//    $('#range328').val(80650).trigger('input');
-//    $('#range329').val(42755).trigger('input');
 });
