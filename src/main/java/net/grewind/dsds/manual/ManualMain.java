@@ -17,6 +17,8 @@ public class ManualMain {
 //        Map<Set<String>, Long> winnerCounts = new HashMap<>();
 //        Map<WinnerName, List<Map.Entry<Long, Long>>> winningSegments = new HashMap<>();
         Map<Integer, List<Map.Entry<Long, Long>>> binaryWinnerSegments = new HashMap<>();
+        Set<Integer> winners = new HashSet<>();
+
 //        Set<WinnerName> winnerNames = new HashSet<>();
         long fullCount = 0;
         int lastWinner = 0;
@@ -39,14 +41,14 @@ public class ManualMain {
         long span328 = ((max328 + SECOND_GAP) - min328) / SECOND_GAP;
         long span329 = ((max329 + SECOND_GAP) - min329) / SECOND_GAP;
 
-        for (long i325 = 0; i325 < span325; i325++) {
-            long g325 = min325 + i325 * SECOND_GAP;
-            printStuff(5, g325, min325, max325, SECOND_GAP);
+        for (long i329 = 0; i329 < span329; i329++) {
+            long g329 = min329 + i329 * SECOND_GAP;
+            printStuff(5, g329, min329, max329, SECOND_GAP);
             for (long i328 = 0; i328 < span328; i328++) {
                 long g328 = min328 + i328 * SECOND_GAP;
                 printStuff(4, g328, min328, max328, SECOND_GAP * 1000);
-                for (long i329 = 0; i329 < span329; i329++) {
-                    long g329 = min329 + i329 * SECOND_GAP;
+                for (long i325 = 0; i325 < span325; i325++) {
+                    long g325 = min325 + i325 * SECOND_GAP;
                     long currentBest = Long.MAX_VALUE;
                     int winnerMap = 0;
                     for (UserGuess userGuess : userGuesses) {
@@ -56,8 +58,7 @@ public class ManualMain {
                                 Math.abs(g329 - userGuess.getGuess329());
                         if (currentBest > difference) {
                             currentBest = difference;
-                            winnerMap = 0;
-                            winnerMap |= (0b1 << (userGuess.getEntryNumber()));
+                            winnerMap = (0b1 << (userGuess.getEntryNumber()));
                         } else if (currentBest == difference) {
                             winnerMap |= (0b1 << (userGuess.getEntryNumber()));
                         }
@@ -85,11 +86,12 @@ public class ManualMain {
 //                    }
                     if (lastWinner == 0) {
                         List<Map.Entry<Long, Long>> spans = new ArrayList<>();
-//                        Map.Entry<Long, Long> span = Map.entry(fullCount, -1L);
                         Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
                         spans.add(span);
                         binaryWinnerSegments.put(winnerMap, spans);
+                        winners.add(winnerMap);
                         lastWinner = winnerMap;
+                        System.out.printf("New winner:%8x %n", winnerMap);
                     } else if (lastWinner != winnerMap) {
                         List<Map.Entry<Long, Long>> lastWinnerSpans = binaryWinnerSegments.get(lastWinner);
                         boolean hasOpen = false;
@@ -118,8 +120,10 @@ public class ManualMain {
                         Map.Entry<Long, Long> span = new AbstractMap.SimpleEntry<>(fullCount, -1L);
                         spans.add(span);
                         binaryWinnerSegments.put(winnerMap, spans);
-
-
+                        if (!winners.contains(winnerMap)) {
+                            winners.add(winnerMap);
+                            System.out.printf("New winner:%8x %n", winnerMap);
+                        }
                         lastWinner = winnerMap;
                     } else {
                         debug();
@@ -162,7 +166,7 @@ public class ManualMain {
         for (Map.Entry<Integer, List<Map.Entry<Long, Long>>> entry : binaryWinnerSegments.entrySet()) {
             for (Map.Entry<Long, Long> span : entry.getValue()) {
                 builder.append("\n");
-                builder.append(String.format("%8x", entry.getKey()))
+                builder.append(String.format("%8x", entry.getKey()).replace(' ', '0'))
                         .append(";").append(span.getKey()).append(";").append(span.getValue());
             }
         }
@@ -178,7 +182,7 @@ public class ManualMain {
     private static void printStuff(int num, long current, long min, long max, long gap) {
         if (current % gap == 0) {
             long now = System.currentTimeMillis();
-            System.out.println(num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + ((current - min) * 100) / (max - min) + "% (" + (now - lastPrint) + "ms)");
+            System.out.println(Thread.currentThread().getName() + " " + num + " " + current + "/" + max + " " + GameTime.secondsToHours(current) + "/" + GameTime.secondsToHours(max) + " " + ((current - min) * 100) / (max - min) + "% (" + (now - lastPrint) + "ms)");
             lastPrint = now;
         }
     }
