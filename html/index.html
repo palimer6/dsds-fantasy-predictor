@@ -24,20 +24,35 @@
         let time = secondsToTime(value);
         timeSpan.html(time);
     };
-/*    const Player = {
-        get currentSeconds() {
-            return timeToSeconds(this.current);
-        },
-        get seconds325() {
-            return timeToSeconds(this.guess325);
-        },
-        get seconds328() {
-            return timeToSeconds(this.guess328);
-        },
-        get seconds329() {
-            return timeToSeconds(this.guess329);
+
+    function updateMin(value, targetRange) {
+        console.log("min", value, targetRange);
+        if (targetRange.attr('min') === undefined || value < targetRange.attr('min')) {
+            targetRange.attr('min', value);
         }
-    };*/
+    };
+
+    function updateMax(value, targetRange) {
+        console.log("max", value, targetRange);
+        if (targetRange.attr('max') === undefined || value > targetRange.attr('max')) {
+            targetRange.attr('max', value);
+        }
+    };
+
+    function addRow(player) {
+        $('#playerTableBody').append(
+            '<tr data-player="' + player.entryNumber + '">' + 
+			'<td class="cell-rank"></td>' + 
+			'<td class="cell-entry">' + player.entryNumber + '</td>' +
+			'<td class="cell-user-name">' + player.userName + '</td>' +
+			'<td class="cell-difference"></td>' +
+			'<td class="cell-current">' + player.current + '</td>' +
+			'<td class="cell-game-325"></td>' +
+			'<td class="cell-game-328"></td>' +
+			'<td class="cell-game-329"></td>' +
+			'</tr>');
+    };
+
     function Player(entryNumber, userName, current, guess325, guess328, guess329) {
         this.entryNumber = entryNumber;
         this.userName = userName;
@@ -90,38 +105,13 @@
 
     $(document).ready(function() {
         for (const player of players) {
-            console.log(player);
-            let s325 = player.seconds325();
-            let s328 = player.seconds328();
-            console.log(s328);
-            let s329 = player.seconds329();
-            let min325 = $('#range325').attr('min');
-            let min328 = $('#range328').attr('min');
-            let min329 = $('#range329').attr('min');
-             let max325 = $('#range325').attr('max');
-            let max328 = $('#range328').attr('max');
-            let max329 = $('#range329').attr('max');
-
-
-            if (min325 === undefined || s325 < min325) {
-                $('#range325').attr('min', s325);
-            }
-            if (min328 === undefined || s328 < min328) {
-                $('#range328').attr('min', s328);
-            }
-            if (min329 === undefined || s329 < min329) {
-                $('#range329').attr('min', s329);
-            }
-
-            if (max325 === undefined || s325 > max325) {
-                $('#range325').attr('max', s325);
-            }
-            if (max328 === undefined || s328 > max328) {
-                $('#range328').attr('max', s328);
-            }
-            if (max329 === undefined || s329 > max329) {
-                $('#range329').attr('max', s329);
-            }
+            updateMin(player.seconds325(), $('#range325'));
+            updateMax(player.seconds325(), $('#range325'));
+            updateMin(player.seconds328(), $('#range328'));
+            updateMax(player.seconds328(), $('#range328'));
+            updateMin(player.seconds329(), $('#range329'));
+            updateMax(player.seconds329(), $('#range329'));
+            addRow(player);
         }
         updateLabel($('#range325').val(), $('#time325'));
         updateLabel($('#range328').val(), $('#time328'));
@@ -141,7 +131,7 @@
     });
 </script>
 <html>
-<head></head>
+<head><title>DSDS Fantasy Predictor</title></head>
 <body>
 <label for="range325" class="form-label">Game 325: <span id="time325"></span></label>
 <input type="range" class="form-range" id="range325">
@@ -150,14 +140,21 @@
 <label for="range329" class="form-label">Game 329: <span id="time329"></span></label>
 <input type="range" class="form-range" id="range329">
 <table id="playerTable">
-    <!--    <tr>-->
-    <!--        <th>entry#</th>-->
-    <!--        <th>userName</th>-->
-    <!--        <th>current</th>-->
-    <!--        <th>Game 325</th>-->
-    <!--        <th>Game 328</th>-->
-    <!--        <th>Game 329</th>-->
-    <!--    </tr>-->
+    <thead>
+    <tr>
+        <th>Rank</th>
+        <th>Entry#</th>
+        <th>Username</th>
+        <th>Time Difference</th>
+        <th>Current Time Difference</th>
+        <th>Game 325 Score</th>
+        <th>Game 328 Score</th>
+        <th>Game 329 Score</th>
+    </tr>
+    </thead>
+    <tbody id="playerTableBody">
+
+    </tbody>
 </table>
 </body>
 </html>
