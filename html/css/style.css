@@ -19,3 +19,8 @@ tr.player-row:has(td.cell-rank[data-rank="2"]) td {
 tr.player-row:has(td.cell-rank[data-rank="3"]) td {
     background-color: #CD7F32;
 }
+
+tr.player-row.highlighted {
+    border-color: black;
+    border-width: 2px;
+}

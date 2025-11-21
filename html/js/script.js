@@ -234,6 +234,15 @@ $(document).ready(function() {
         checkDuplicateRanks();
     });
 
+    $('tr.player-row td').on('click', function() {
+        let isHighlighted = $(this).parent().hasClass('highlighted');
+        if (isHighlighted) {
+            $(this).parent().removeClass('highlighted');
+        } else {
+            $(this).parent().addClass('highlighted');
+        }
+    });
+
 //    $('#range325').val(13950).trigger('input');
 //    $('#range328').val(80650).trigger('input');
 //    $('#range329').val(42755).trigger('input');
