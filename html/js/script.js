@@ -32,12 +32,12 @@ function updateMax(value, targetRange) {
 
 function addRow(player) {
     $('#playerTableBody').append(
-        '<tr data-player="' + player.entryNumber + '">' +
+        '<tr class="player-row" data-player="' + player.entryNumber + '">' +
 		'<td class="cell-rank"></td>' +
 		'<td class="cell-entry">' + player.entryNumber + '</td>' +
 		'<td class="cell-user-name">' + player.userName + '</td>' +
-		'<td class="cell-difference"></td>' +
-		'<td class="cell-current">' + player.current + '</td>' +
+		'<td class="cell-total"></td>' +
+		'<td class="cell-current" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
 		'<td class="cell-game-325"></td>' +
 		'<td class="cell-game-328"></td>' +
 		'<td class="cell-game-329"></td>' +
@@ -50,9 +50,25 @@ function updateScores(game) {
 		let method = player['seconds' + game];
 		let methodReturn = player['seconds' + game]();
 		let score = Math.abs(value - methodReturn);
-		$('tr[data-player="' + player.entryNumber + '"] td.cell-game-' + game).val(score).html(secondsToTime(score));
+		let target = $('tr[data-player="' + player.entryNumber + '"] td.cell-game-' + game);
+		target.attr('data-seconds', score);
+		target.html(secondsToTime(score));
 	}
+	updateTotals();
 };
+
+function updateTotals() {
+    $('.player-row').each(function(e) {
+        let current = Number($(this).find('td.cell-current').attr('data-seconds'));
+        let g325 = Number($(this).find('td.cell-game-325').attr('data-seconds'));
+        let g328 = Number($(this).find('td.cell-game-328').attr('data-seconds'));
+        let g329 = Number($(this).find('td.cell-game-329').attr('data-seconds'));
+        let total = current + g325 + g328 + g329;
+        console.log(total);
+        $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
+        console.log(current, g325, g328, g329);
+    });
+}
 
 function Player(entryNumber, userName, current, guess325, guess328, guess329) {
     this.entryNumber = entryNumber;

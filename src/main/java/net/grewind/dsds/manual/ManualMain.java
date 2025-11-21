@@ -41,14 +41,14 @@ public class ManualMain {
         long span328 = ((max328 + SECOND_GAP) - min328) / SECOND_GAP;
         long span329 = ((max329 + SECOND_GAP) - min329) / SECOND_GAP;
 
-        for (long i329 = 0; i329 < span329; i329++) {
-            long g329 = min329 + i329 * SECOND_GAP;
-            printStuff(5, g329, min329, max329, SECOND_GAP);
+        for (long i325 = 0; i325 < span325; i325++) {
+            long g325 = min325 + i325 * SECOND_GAP;
+            printStuff(5, g325, min325, max325, SECOND_GAP);
             for (long i328 = 0; i328 < span328; i328++) {
                 long g328 = min328 + i328 * SECOND_GAP;
                 printStuff(4, g328, min328, max328, SECOND_GAP * 1000);
-                for (long i325 = 0; i325 < span325; i325++) {
-                    long g325 = min325 + i325 * SECOND_GAP;
+                for (long i329 = 0; i329 < span329; i329++) {
+                    long g329 = min329 + i329 * SECOND_GAP;
                     long currentBest = Long.MAX_VALUE;
                     int winnerMap = 0;
                     for (UserGuess userGuess : userGuesses) {
@@ -123,6 +123,9 @@ public class ManualMain {
                         if (!winners.contains(winnerMap)) {
                             winners.add(winnerMap);
                             System.out.printf("New winner:%8x %n", winnerMap);
+                            printStuff(-1,g325,min325, max325, 1);
+                            printStuff(-1,g328,min328, max328, 1);
+                            printStuff(-1,g329,min329, max329, 1);
                         }
                         lastWinner = winnerMap;
                     } else {
