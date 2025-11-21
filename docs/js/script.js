@@ -17,18 +17,22 @@ function updateLabel(value, timeSpan) {
 };
 
 function updateMin(value, targetRange) {
-    console.log("min", value, targetRange);
     if (targetRange.attr('min') === undefined || value < targetRange.attr('min')) {
         targetRange.attr('min', value);
     }
 };
 
 function updateMax(value, targetRange) {
-    console.log("max", value, targetRange);
     if (targetRange.attr('max') === undefined || value > targetRange.attr('max')) {
         targetRange.attr('max', value);
     }
 };
+
+function getRangeMiddle(game) {
+    let min = Number($('#range' + game).attr('min'));
+    let max = Number($('#range' + game).attr('max'));
+    return Math.round((min + max) / 2);
+}
 
 function addMarker(value, userName, datalist) {
     datalist.append('<option value="' + value + '" label="' + secondsToTime(value) + '"></option>');
@@ -200,9 +204,9 @@ $(document).ready(function() {
 //    $('#range325').val(13950).trigger('input');
 //    $('#range328').val(80650).trigger('input');
 //    $('#range329').val(42755).trigger('input');
-    $('#range325').val(0);
-    $('#range328').val(0);
-    $('#range329').val(0);
+    $('#range325').val(getRangeMiddle(325));
+    $('#range328').val(getRangeMiddle(328));
+    $('#range329').val(getRangeMiddle(329));
     sortTable('cell-current');
     updateRanks();
     checkDuplicateRanks();
