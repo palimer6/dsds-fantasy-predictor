@@ -25,6 +25,10 @@ tr.player-row.highlighted {
     border-width: 2px;
 }
 
+[data-bs-theme="dark"] tr.player-row.highlighted {
+    border-color: white;
+}
+
 .hidden-col {
     visibility: collapse;
 }
