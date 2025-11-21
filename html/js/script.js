@@ -54,9 +54,6 @@ function updateScores(game, propagate = true) {
 		target.attr('data-seconds', score);
 		target.html(secondsToTime(score));
 	}
-	if (propagate) {
-	    updateTotals(propagate);
-	}
 };
 
 function updateTotals() {
@@ -68,7 +65,6 @@ function updateTotals() {
         let total = current + g325 + g328 + g329;
         $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
     });
-    sortTable();
 }
 
 function sortTable() {
@@ -94,6 +90,10 @@ function sortTable() {
             switching = true;
         }
     }
+}
+
+function rank() {
+
 }
 
 function Player(entryNumber, userName, current, guess325, guess328, guess329) {
@@ -168,15 +168,24 @@ $(document).ready(function() {
     $('#range325').on('input', function() {
         updateLabel($(this).val(), $('#time325'));
 		updateScores('325');
+		updateTotals();
+		sortTable();
+		rank();
     });
 
     $('#range328').on('input', function() {
         updateLabel($(this).val(), $('#time328'));
 		updateScores('328');
+		updateTotals();
+        sortTable();
+        rank();
     });
 
     $('#range329').on('input', function() {
         updateLabel($(this).val(), $('#time329'));
 		updateScores('329');
+		updateTotals();
+        sortTable();
+        rank();
     });
 });
