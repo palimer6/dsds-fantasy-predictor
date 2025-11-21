@@ -48,6 +48,7 @@ function addRow(player) {
 		'<td class="cell-game-328 text-end"></td>' +
 		'<td class="cell-guess-329 text-end">' + player.guess329 + '</td>' +
 		'<td class="cell-game-329 text-end"></td>' +
+		'<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
 		'</tr>');
 };
 
@@ -232,6 +233,19 @@ $(document).ready(function() {
         sortTable();
         updateRanks();
         checkDuplicateRanks();
+    });
+
+    $('tr.player-row td.cell-set .set-button').on('click', function(e) {
+        e.stopPropagation();
+        let entryNumber = Number($(this).parent().parent().attr('data-player'));
+        for (const player of players) {
+            if (player.entryNumber === entryNumber) {
+                $('#range325').val(player.seconds325()).trigger('input');
+                $('#range328').val(player.seconds328()).trigger('input');
+                $('#range329').val(player.seconds329()).trigger('input');
+                return;
+            }
+        }
     });
 
     $('tr.player-row td').on('click', function() {
