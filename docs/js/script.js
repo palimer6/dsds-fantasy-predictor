@@ -45,6 +45,7 @@ function addRow(player) {
 		'<!--td class="cell-entry text-end">' + player.entryNumber + '</td-->' +
 		'<td class="cell-user-name">' + player.userName + '</td>' +
 		'<td class="cell-total text-end">00:00:00</td>' +
+		'<td class="cell-to-next text-end"></td>' +
 		'<td class="cell-current text-end" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
 		'<td class="cell-guess-325 text-end">' + player.guess325 + '</td>' +
 		'<td class="cell-game-325 text-end">0:00:00</td>' +
@@ -105,18 +106,23 @@ function sortTable(cellClass = 'cell-total') {
 
 let duplicateRanks = new Set();
 
-function updateRanks() {
+function updateRanks(checkClass = 'cell-total') {
     duplicateRanks.clear();
     let i = 1;
     let sameCount = 0;
     let lastTotal = 0;
     $('#playerTableBody tr.player-row').each(function () {
-        let total = Number($(this).find('td.cell-total').attr('data-seconds'));
+        let total = Number($(this).find('td.' + checkClass).attr('data-seconds'));
         if (total === lastTotal) {
             sameCount++;
             duplicateRanks.add(i - sameCount);
         } else {
             sameCount = 0;
+        }
+        if ((i - sameCount) > 1) {
+            $(this).find('td.cell-to-next').attr('data-seconds', total - lastTotal).html('+' + secondsToTime(total - lastTotal));
+        } else {
+            $(this).find('td.cell-to-next').attr('data-seconds', 0).html('');
         }
         lastTotal = total;
         $(this).find('td.cell-rank').attr('data-rank', i - sameCount).html(i - sameCount);
@@ -208,7 +214,7 @@ $(document).ready(function() {
     $('#range328').val(getRangeMiddle(328));
     $('#range329').val(getRangeMiddle(329));
     sortTable('cell-current');
-    updateRanks();
+    updateRanks('cell-current');
     checkDuplicateRanks();
 
     let firstInput = true;
