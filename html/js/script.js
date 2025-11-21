@@ -68,7 +68,6 @@ function updateTotals() {
 }
 
 function sortTable() {
-    let table = $('#playerTable');
     let switching = true;
     while (switching) {
         switching = false;
@@ -92,8 +91,21 @@ function sortTable() {
     }
 }
 
-function rank() {
-
+function updateRanks() {
+    let i = 1;
+    let sameCount = 0;
+    let lastTotal = 0;
+    $('#playerTableBody tr.player-row').each(function () {
+        let total = Number($(this).find('td.cell-total').attr('data-seconds'));
+        if (total === lastTotal) {
+            sameCount++;
+        } else {
+            sameCount = 0;
+        }
+        lastTotal = total;
+        $(this).find('td.cell-rank').attr('data-rank', i - sameCount).html(i - sameCount);
+        i++;
+    });
 }
 
 function Player(entryNumber, userName, current, guess325, guess328, guess329) {
@@ -164,13 +176,15 @@ $(document).ready(function() {
 	updateScores('328', false);
 	updateScores('329', false);
 	updateTotals();
+	sortTable();
+	updateRanks();
 
     $('#range325').on('input', function() {
         updateLabel($(this).val(), $('#time325'));
 		updateScores('325');
 		updateTotals();
 		sortTable();
-		rank();
+		updateRanks();
     });
 
     $('#range328').on('input', function() {
@@ -178,7 +192,7 @@ $(document).ready(function() {
 		updateScores('328');
 		updateTotals();
         sortTable();
-        rank();
+        updateRanks();
     });
 
     $('#range329').on('input', function() {
@@ -186,6 +200,10 @@ $(document).ready(function() {
 		updateScores('329');
 		updateTotals();
         sortTable();
-        rank();
+        updateRanks();
     });
+
+//    $('#range325').val(13950).trigger('input');
+//    $('#range328').val(80650).trigger('input');
+//    $('#range329').val(42755).trigger('input');
 });
