@@ -64,10 +64,34 @@ function updateTotals() {
         let g328 = Number($(this).find('td.cell-game-328').attr('data-seconds'));
         let g329 = Number($(this).find('td.cell-game-329').attr('data-seconds'));
         let total = current + g325 + g328 + g329;
-        console.log(total);
         $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
-        console.log(current, g325, g328, g329);
     });
+    sortTable();
+}
+
+function sortTable() {
+    let table = $('#playerTable');
+    let switching = true;
+    while (switching) {
+        switching = false;
+        let shouldSwitch = false;
+        let i;
+        let rows = $('#playerTableBody tr.player-row');
+        for (i = 0; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            let currentTotal = Number(rows.eq(i).find('td.cell-total').attr('data-seconds'));
+            let nextTotal = Number(rows.eq(i + 1).find('td.cell-total').attr('data-seconds'));
+
+            if (currentTotal > nextTotal) {
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            rows.eq(i).before(rows.eq(i + 1));
+            switching = true;
+        }
+    }
 }
 
 function Player(entryNumber, userName, current, guess325, guess328, guess329) {
