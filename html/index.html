@@ -11,13 +11,30 @@
 <html>
 <head><title>DSDS Fantasy Predictor</title></head>
 <body>
-<label for="range325" class="form-label">Game 325: <span id="time325"></span></label>
-<input type="range" class="form-range time-range" id="range325">
-<label for="range328" class="form-label">Game 328: <span id="time328"></span></label>
-<input type="range" class="form-range time-range" id="range328">
-<label for="range329" class="form-label">Game 329: <span id="time329"></span></label>
-<input type="range" class="form-range time-range" id="range329">
-<table id="playerTable" class="table table-striped table-hover">
+<div class="m-3 p-1">
+    <div class="row">
+        <span id="time325" class="col-2 col-md-1"></span>
+        <label for="range325" class="form-label col-auto">#325 - Spyro: Shadow Legacy:</label>
+    </div>
+    <div class="row">
+        <input type="range" class="form-range time-range" id="range325">
+    </div>
+    <div class="row">
+        <span id="time328" class="col-2 col-md-1"></span>
+        <label for="range328" class="form-label col-auto">#328 - Dragon Ball Z: Attack of the Saiyans:</label>
+    </div>
+    <div class="row">
+        <input type="range" class="form-range time-range" id="range328">
+    </div>
+    <div class="row">
+        <span id="time329" class="col-2 col-md-1"></span>
+        <label for="range329" class="form-label col-auto">#329 - Exit DS:</label>
+    </div>
+    <div class="row">
+        <input type="range" class="form-range time-range" id="range329">
+    </div>
+</div>
+<table id="playerTable" class="table table-striped table-hover table-bordered">
     <thead>
     <tr>
         <th>Rank</th>
@@ -25,9 +42,9 @@
         <th>Username</th>
         <th>Time Difference</th>
         <th>Current Time Difference</th>
-        <th>Game 325 Score</th>
-        <th>Game 328 Score</th>
-        <th>Game 329 Score</th>
+        <th colspan="2">#325 - Spyro: Shadow Legacy</th>
+        <th colspan="2">#328 - Dragon Ball Z: Attack of the Saiyans</th>
+        <th colspan="2">#329 - Exit DS</th>
     </tr>
     </thead>
     <tbody id="playerTableBody">

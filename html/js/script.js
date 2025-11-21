@@ -38,8 +38,11 @@ function addRow(player) {
 		'<td class="cell-user-name">' + player.userName + '</td>' +
 		'<td class="cell-total"></td>' +
 		'<td class="cell-current" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
+		'<td class="cell-guess-325">' + player.guess325 + '</td>' +
 		'<td class="cell-game-325"></td>' +
+		'<td class="cell-guess-328">' + player.guess328 + '</td>' +
 		'<td class="cell-game-328"></td>' +
+		'<td class="cell-guess-329">' + player.guess329 + '</td>' +
 		'<td class="cell-game-329"></td>' +
 		'</tr>');
 };
