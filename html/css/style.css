@@ -24,3 +24,7 @@ tr.player-row.highlighted {
     border-color: black;
     border-width: 2px;
 }
+
+.hidden-col {
+    visibility: collapse;
+}

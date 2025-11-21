@@ -37,17 +37,17 @@ function addMarker(value, userName, datalist) {
 function addRow(player) {
     $('#playerTableBody').append(
         '<tr class="player-row" data-player="' + player.entryNumber + '">' +
-		'<td class="cell-rank"></td>' +
-		'<td class="cell-entry">' + player.entryNumber + '</td>' +
+		'<td class="cell-rank text-end"></td>' +
+		'<!--td class="cell-entry text-end">' + player.entryNumber + '</td-->' +
 		'<td class="cell-user-name">' + player.userName + '</td>' +
-		'<td class="cell-total"></td>' +
-		'<td class="cell-current" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
-		'<td class="cell-guess-325">' + player.guess325 + '</td>' +
-		'<td class="cell-game-325"></td>' +
-		'<td class="cell-guess-328">' + player.guess328 + '</td>' +
-		'<td class="cell-game-328"></td>' +
-		'<td class="cell-guess-329">' + player.guess329 + '</td>' +
-		'<td class="cell-game-329"></td>' +
+		'<td class="cell-total text-end"></td>' +
+		'<td class="cell-current text-end" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
+		'<td class="cell-guess-325 text-end">' + player.guess325 + '</td>' +
+		'<td class="cell-game-325 text-end"></td>' +
+		'<td class="cell-guess-328 text-end">' + player.guess328 + '</td>' +
+		'<td class="cell-game-328 text-end"></td>' +
+		'<td class="cell-guess-329 text-end">' + player.guess329 + '</td>' +
+		'<td class="cell-game-329 text-end"></td>' +
 		'</tr>');
 };
 
