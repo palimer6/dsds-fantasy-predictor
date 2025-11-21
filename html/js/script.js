@@ -44,7 +44,7 @@ function addRow(player) {
 		'</tr>');
 };
 
-function updateScores(game) {
+function updateScores(game, propagate = true) {
 	let value = $('#range' + game).val();
 	for (const player of players) {
 		let method = player['seconds' + game];
@@ -54,7 +54,9 @@ function updateScores(game) {
 		target.attr('data-seconds', score);
 		target.html(secondsToTime(score));
 	}
-	updateTotals();
+	if (propagate) {
+	    updateTotals(propagate);
+	}
 };
 
 function updateTotals() {
@@ -105,13 +107,13 @@ function Player(entryNumber, userName, current, guess325, guess328, guess329) {
         return timeToSeconds(this.current);
     };
     this.seconds325 = function() {
-     return timeToSeconds(this.guess325);
+        return timeToSeconds(this.guess325);
     };
     this.seconds328 = function() {
-     return timeToSeconds(this.guess328);
+        return timeToSeconds(this.guess328);
     };
     this.seconds329 = function() {
-     return timeToSeconds(this.guess329);
+        return timeToSeconds(this.guess329);
     };
 };
 
@@ -158,9 +160,10 @@ $(document).ready(function() {
     updateLabel($('#range325').val(), $('#time325'));
     updateLabel($('#range328').val(), $('#time328'));
     updateLabel($('#range329').val(), $('#time329'));
-	updateScores('325');
-	updateScores('328');
-	updateScores('329');
+	updateScores('325', false);
+	updateScores('328', false);
+	updateScores('329', false);
+	updateTotals();
 
     $('#range325').on('input', function() {
         updateLabel($(this).val(), $('#time325'));
