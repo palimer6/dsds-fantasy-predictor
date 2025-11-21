@@ -41,5 +41,15 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+# stuff from previous java project
 src/main/
 src/test/
+build.gradle
+gradlew
+gradlew.bat
+paste-into-sheets.csv
+results.csv
+settings.gradle
+sheet-copy.txt
+gradle/
+.idea/
