@@ -38,8 +38,10 @@ function addMarker(value, userName, datalist) {
     datalist.append('<option value="' + value + '" label="' + secondsToTime(value) + '"></option>');
 };
 
-let games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
-let actualTimes = {309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"};
+const games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
+const actualTimes = {
+    309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"
+};
 let upcomingGames = [];
 
 function hasBeenPlayed(game) {
@@ -60,7 +62,7 @@ function addRanges() {
             '<label for="range' + gameNumber + '" class="form-label col-auto">#' + gameNumber + ' - ' + games[gameNumber] + '</label>' +
             '</div>' +
             '<div class="row">' +
-            '<input type="range" class="form-range time-range" id="range' + gameNumber + '" list="list' + gameNumber + '">' +
+            '<input type="range" class="form-range time-range" id="range' + gameNumber + '" list="list' + gameNumber + '" data-game="' + gameNumber + '">' +
             '<datalist id="list' + gameNumber + '"></datalist>' +
             '</div>');
     }
@@ -93,7 +95,7 @@ function addRow(player) {
     $('#playerTableBody').append(tableRow);
 };
 
-function updateScores(game, propagate = true) {
+function updateScores(game) {
 	let value = $('#range' + game).val();
 	for (const player of players) {
 		let score = Math.abs(value - player.seconds(game));
@@ -105,10 +107,11 @@ function updateScores(game, propagate = true) {
 
 function updateTotals() {
     $('.player-row').each(function(e) {
-        let current = Number($(this).find('td.cell-current').attr('data-seconds'));
-        let g325 = Number($(this).find('td.cell-game-325').attr('data-seconds'));
-        let g329 = Number($(this).find('td.cell-game-329').attr('data-seconds'));
-        let total = current + g325 + g329;
+        let total = Number($(this).find('td.cell-current').attr('data-seconds'));
+        for (let upcomingGame of upcomingGames) {
+            let score = Number($(this).find('td.cell-game-' + upcomingGame).attr('data-seconds'));
+            total += score;
+        }
         $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
     });
 };
@@ -234,19 +237,19 @@ $(document).ready(function() {
     addRanges();
     addHeaders();
     for (const player of players) {
-        updateMin(player.seconds(325), $('#range325'));
-        updateMax(player.seconds(325), $('#range325'));
-        addMarker(player.seconds(325), player.userName, $('#list325'));
-        updateMin(player.seconds(329), $('#range329'));
-        updateMax(player.seconds(329), $('#range329'));
-        addMarker(player.seconds(329), player.userName, $('#list329'));
+        for (let gameNumber of upcomingGames) {
+            updateMin(player.seconds(gameNumber), $('#range' + gameNumber));
+            updateMax(player.seconds(gameNumber), $('#range' + gameNumber));
+            addMarker(player.seconds(gameNumber), player.userName, $('#list' + gameNumber));
+        }
         addRow(player);
     }
 //    $('#range325').val(13950).trigger('input');
 //    $('#range328').val(80650).trigger('input');
 //    $('#range329').val(42755).trigger('input');
-    $('#range325').val(getRangeMiddle(325));
-    $('#range329').val(getRangeMiddle(329));
+    for (let gameNumber of upcomingGames) {
+        $('#range' + gameNumber).val(getRangeMiddle(gameNumber));
+    }
     sortTable('cell-current');
     updateRanks('cell-current');
     checkDuplicateRanks();
@@ -255,28 +258,20 @@ $(document).ready(function() {
     $('.time-range').on('input', function() {
         if (firstInput) {
             firstInput = false;
-            updateLabel($('#range325').val(), $('#time325'));
-            updateLabel($('#range329').val(), $('#time329'));
-            updateScores('325', false);
-            updateScores('329', false);
+            for (let gameNumber of upcomingGames) {
+                updateLabel($('#range' + gameNumber).val(), $('#time' + gameNumber));
+                updateScores(gameNumber);
+            }
             updateTotals();
         }
     });
 
 
-    $('#range325').on('input', function() {
-        updateLabel($(this).val(), $('#time325'));
-		updateScores('325');
-		updateTotals();
-		sortTable();
-		updateRanks();
-		checkDuplicateRanks();
-    });
-
-    $('#range329').on('input', function() {
-        updateLabel($(this).val(), $('#time329'));
-		updateScores('329');
-		updateTotals();
+    $('.time-range').on('input', function() {
+        let gameNumber = $(this).attr('data-game');
+        updateLabel($(this).val(), $('#time' + gameNumber));
+        updateScores(gameNumber);
+        updateTotals();
         sortTable();
         updateRanks();
         checkDuplicateRanks();
@@ -287,8 +282,11 @@ $(document).ready(function() {
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
         for (const player of players) {
             if (player.entryNumber === entryNumber) {
-                $('#range325').val(player.seconds325()).trigger('input');
-                $('#range329').val(player.seconds329()).trigger('input');
+                for (let gameNumber of upcomingGames) {
+                    $('#range' + gameNumber)
+                        .val(player.seconds(gameNumber))
+                        .trigger('input');
+                }
                 return;
             }
         }
