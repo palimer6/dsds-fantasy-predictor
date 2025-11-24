@@ -49,8 +49,6 @@ function addRow(player) {
 		'<td class="cell-current text-end" data-seconds="' + player.currentSeconds() + '">' + player.current + '</td>' +
 		'<td class="cell-guess-325 text-end">' + player.guess325 + '</td>' +
 		'<td class="cell-game-325 text-end">0:00:00</td>' +
-		'<td class="cell-guess-328 text-end">' + player.guess328 + '</td>' +
-		'<td class="cell-game-328 text-end">0:00:00</td>' +
 		'<td class="cell-guess-329 text-end">' + player.guess329 + '</td>' +
 		'<td class="cell-game-329 text-end">0:00:00</td>' +
 		'<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
@@ -73,9 +71,8 @@ function updateTotals() {
     $('.player-row').each(function(e) {
         let current = Number($(this).find('td.cell-current').attr('data-seconds'));
         let g325 = Number($(this).find('td.cell-game-325').attr('data-seconds'));
-        let g328 = Number($(this).find('td.cell-game-328').attr('data-seconds'));
         let g329 = Number($(this).find('td.cell-game-329').attr('data-seconds'));
-        let total = current + g325 + g328 + g329;
+        let total = current + g325 + g329;
         $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
     });
 };
@@ -143,12 +140,11 @@ function checkDuplicateRanks() {
     });
 };
 
-function Player(entryNumber, userName, current, guess325, guess328, guess329) {
+function Player(entryNumber, userName, current, guess325, guess329) {
     this.entryNumber = entryNumber;
     this.userName = userName;
     this.current = current;
     this.guess325 = guess325;
-    this.guess328 = guess328;
     this.guess329 = guess329;
     this.currentSeconds = function() {
         return timeToSeconds(this.current);
@@ -156,52 +152,46 @@ function Player(entryNumber, userName, current, guess325, guess328, guess329) {
     this.seconds325 = function() {
         return timeToSeconds(this.guess325);
     };
-    this.seconds328 = function() {
-        return timeToSeconds(this.guess328);
-    };
     this.seconds329 = function() {
         return timeToSeconds(this.guess329);
     };
 };
 
 let players = [];
-players.push(new Player(1, "pmcTRILOGY", "37:44:53", "4:00:00", "22:00:00", "25:00:00"));
-players.push(new Player(2, "Inestimate", "53:11:28", "4:27:00", "27:27:27", "28:05:00"));
-players.push(new Player(3, "ShockingX", "81:18:17", "5:01:38", "25:29:38", "19:38:00"));
-players.push(new Player(4, "zambrini213", "31:59:51", "4:40:00", "24:20:00", "32:35:00"));
-players.push(new Player(5, "JamieTheBnnuy", "39:12:36", "4:31:02", "27:01:45", "29:31:31"));
-players.push(new Player(6, "Piranhamoe", "54:21:57", "4:15:00", "18:00:00", "20:00:00"));
-players.push(new Player(7, "teddyras", "34:14:05", "4:00:00", "26:00:00", "40:00:00"));
-players.push(new Player(8, "ECGreem", "34:20:04", "4:25:36", "21:22:23", "23:59:59"));
-players.push(new Player(9, "Naked_Tonberry", "39:31:23", "4:00:00", "20:00:00", "15:00:00"));
-players.push(new Player(10, "Awe / awestrikernova", "35:39:43", "4:40:00", "23:00:00", "20:00:00"));
-players.push(new Player(11, "Why_am_i_here44 ", "45:06:28", "4:55:23", "25:42:51", "26:31:12"));
-players.push(new Player(12, "ogNdrahciR", "42:34:55", "5:30:00", "32:00:00", "20:00:00"));
-players.push(new Player(13, "galaxy178", "33:49:33", "4:45:00", "23:00:00", "2:00:00"));
-players.push(new Player(14, "IllegallySam", "33:21:23", "4:46:11", "25:19:00", "28:10:31"));
-players.push(new Player(15, "TheJewker", "42:27:05", "4:40:00", "26:00:00", "7:00:00"));
-players.push(new Player(16, "Cosmic_Flora", "44:03:01", "4:34:00", "25:25:00", "26:37:00"));
-players.push(new Player(17, "Toadat", "37:00:15", "4:21:09", "24:24:24", "22:22:22"));
-players.push(new Player(18, "wonderj13", "46:54:07", "3:59:59", "16:30:01", "12:30:01"));
-players.push(new Player(19, "palimer6", "32:04:18", "4:31:27", "27:15:08", "21:17:59"));
-players.push(new Player(20, "positiveiona", "34:40:12", "6:00:00", "23:49:00", "30:30:30"));
-players.push(new Player(21, "driabwb ", "36:31:37", "6:24:00", "30:01:00", "32:23:00"));
-players.push(new Player(22, "xenocythe", "41:02:18", "5:07:19", "24:13:37", "29:03:29"));
-players.push(new Player(23, "JoshPrep", "94:29:04", "3:30:15", "25:45:59", "27:00:35"));
-players.push(new Player(24, "FurretTurret", "36:38:20", "4:19:59", "22:22:22", "3:02:42"));
-players.push(new Player(25, "Lan990", "41:26:13", "5:30:00", "25:00:00", "5:00:00"));
-players.push(new Player(26, "WickBRSTM", "36:24:49", "3:52:30", "23:48:59", "20:00:00"));
-players.push(new Player(27, "Asmodemus0", "44:39:39", "4:30:01", "19:41:56", "15:41:11"));
-players.push(new Player(28, "kiYubEE", "45:07:33", "4:44:44", "25:12:25", "26:52:21"));
+players.push(new Player(1, "pmcTRILOGY", "43:00:47", "4:00:00", "25:00:00"));
+players.push(new Player(2, "Inestimate", "53:23:01", "4:27:00", "28:05:00"));
+players.push(new Player(3, "ShockingX", "83:04:33", "5:01:38", "19:38:00"));
+players.push(new Player(4, "zambrini213", "34:55:45", "4:40:00", "32:35:00"));
+players.push(new Player(5, "JamieTheBnnuy", "39:26:45", "4:31:02", "29:31:31"));
+players.push(new Player(6, "Piranhamoe", "63:37:51", "4:15:00", "20:00:00"));
+players.push(new Player(7, "teddyras", "35:29:59", "4:00:00", "40:00:00"));
+players.push(new Player(8, "ECGreem", "40:13:35", "4:25:36", "23:59:59"));
+players.push(new Player(9, "Naked_Tonberry", "46:47:17", "4:00:00", "15:00:00"));
+players.push(new Player(10, "Awe / awestrikernova", "39:55:37", "4:40:00", "20:00:00"));
+players.push(new Player(11, "Why_am_i_here44 ", "46:39:31", "4:55:23", "26:31:12"));
+players.push(new Player(12, "ogNdrahciR", "47:19:01", "5:30:00", "20:00:00"));
+players.push(new Player(13, "galaxy178", "38:05:27", "4:45:00", "2:00:00"));
+players.push(new Player(14, "IllegallySam", "35:18:17", "4:46:11", "28:10:31"));
+players.push(new Player(15, "TheJewker", "43:42:59", "4:40:00", "7:00:00"));
+players.push(new Player(16, "Cosmic_Flora", "45:53:55", "4:34:00", "26:37:00"));
+players.push(new Player(17, "Toadat", "39:51:45", "4:21:09", "22:22:22"));
+players.push(new Player(18, "wonderj13", "57:40:00", "3:59:59", "12:30:01"));
+players.push(new Player(19, "palimer6", "32:05:04", "4:31:27", "21:17:59"));
+players.push(new Player(20, "positiveiona", "38:07:06", "6:00:00", "30:30:30"));
+players.push(new Player(21, "driabwb ", "39:16:43", "6:24:00", "32:23:00"));
+players.push(new Player(22, "xenocythe", "44:04:35", "5:07:19", "29:03:29"));
+players.push(new Player(23, "JoshPrep", "95:58:59", "3:30:15", "27:00:35"));
+players.push(new Player(24, "FurretTurret", "41:31:52", "4:19:59", "3:02:42"));
+players.push(new Player(25, "Lan990", "43:42:07", "5:30:00", "5:00:00"));
+players.push(new Player(26, "WickBRSTM", "39:51:44", "3:52:30", "20:00:00"));
+players.push(new Player(27, "Asmodemus0", "52:13:37", "4:30:01", "15:41:11"));
+players.push(new Player(28, "kiYubEE", "47:11:02", "4:44:44", "26:52:21"));
 
 $(document).ready(function() {
     for (const player of players) {
         updateMin(player.seconds325(), $('#range325'));
         updateMax(player.seconds325(), $('#range325'));
         addMarker(player.seconds325(), player.userName, $('#list325'));
-        updateMin(player.seconds328(), $('#range328'));
-        updateMax(player.seconds328(), $('#range328'));
-        addMarker(player.seconds328(), player.userName, $('#list328'));
         updateMin(player.seconds329(), $('#range329'));
         updateMax(player.seconds329(), $('#range329'));
         addMarker(player.seconds329(), player.userName, $('#list329'));
@@ -211,7 +201,6 @@ $(document).ready(function() {
 //    $('#range328').val(80650).trigger('input');
 //    $('#range329').val(42755).trigger('input');
     $('#range325').val(getRangeMiddle(325));
-    $('#range328').val(getRangeMiddle(328));
     $('#range329').val(getRangeMiddle(329));
     sortTable('cell-current');
     updateRanks('cell-current');
@@ -222,10 +211,8 @@ $(document).ready(function() {
         if (firstInput) {
             firstInput = false;
             updateLabel($('#range325').val(), $('#time325'));
-            updateLabel($('#range328').val(), $('#time328'));
             updateLabel($('#range329').val(), $('#time329'));
             updateScores('325', false);
-            updateScores('328', false);
             updateScores('329', false);
             updateTotals();
         }
@@ -239,15 +226,6 @@ $(document).ready(function() {
 		sortTable();
 		updateRanks();
 		checkDuplicateRanks();
-    });
-
-    $('#range328').on('input', function() {
-        updateLabel($(this).val(), $('#time328'));
-		updateScores('328');
-		updateTotals();
-        sortTable();
-        updateRanks();
-        checkDuplicateRanks();
     });
 
     $('#range329').on('input', function() {
@@ -265,7 +243,6 @@ $(document).ready(function() {
         for (const player of players) {
             if (player.entryNumber === entryNumber) {
                 $('#range325').val(player.seconds325()).trigger('input');
-                $('#range328').val(player.seconds328()).trigger('input');
                 $('#range329').val(player.seconds329()).trigger('input');
                 return;
             }
