@@ -94,17 +94,49 @@ for (let gameNumber in games) {
     }
 }
 
+const MAX_RANGE_ROWS = 5;
+const rowSizes = [1, 2, 3, 4, 6, 12];
+
 function addRanges() {
-    for (let gameNumber of upcomingGames) {
-        $('#gameRanges').append(
-            `<div class="row">
-                <span id="time${gameNumber}" class="col-2 col-md-1"></span>
-                <label for="range${gameNumber}" class="form-label col-auto">#${gameNumber} - ${games[gameNumber]}</label>
-            </div>
-            <div class="row">
-                <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
-                <datalist id="list${gameNumber}"></datalist>
-            </div>`);
+    let upcomingSize = upcomingGames.length;
+    let chosenSize;
+    for (let rowSize of rowSizes) {
+        if (rowSize * MAX_RANGE_ROWS >= upcomingGames.length) {
+            chosenSize = rowSize;
+            break;
+        }
+    }
+    let gridColSize = 12 / chosenSize;
+    let slices = [];
+    let sliceStart = 0;
+    while (sliceStart < upcomingGames.length) {
+        slices.push(upcomingGames.slice(sliceStart, sliceStart + chosenSize));
+        sliceStart += chosenSize;
+    }
+    let rows = '';
+    for (let slice of slices) {
+        let timeRow = '<div class="row">';
+        let titleRow = '<div class="row">';
+        let rangeRow = '<div class="row">';
+        for (let game of slice) {
+            timeRow = `${timeRow}
+                <div class="col-${gridColSize}">
+                    <span id="time${game}"></span>
+                </div>`;
+            titleRow = `${titleRow}
+                <div class="col-${gridColSize}">
+                    <label for="range${game}" class="form-label">#${game} - ${games[game]}</label>
+                </div>`;
+            rangeRow = `${rangeRow}
+                <div class="col-${gridColSize}">
+                    <input type="range" class="form-range time-range" id="range${game}" list="list${game}" data-game="${game}">
+                    <datalist id="list${game}"></datalist>
+                </div>`;
+        }
+        timeRow = `${timeRow}</div>`;
+        titleRow = `${titleRow}</div>`;
+        rangeRow = `${rangeRow}</div>`;
+        $('#gameRanges').append(timeRow + titleRow + rangeRow);
     }
 }
 
