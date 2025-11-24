@@ -41,9 +41,13 @@ function addMarker(value, userName, datalist) {
 let games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
 let actualTimes = {309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"};
 
+function hasBeenPlayed(game) {
+    return game in actualTimes;
+}
+
 function addRanges() {
     for (let gameNumber in games) {
-        if (!(gameNumber in actualTimes)) {
+        if (!hasBeenPlayed(gameNumber)) {
             $('#gameRanges').append(
                 '<div class="row">' +
                 '<span id="time' + gameNumber + '" class="col-2 col-md-1"></span>' +
@@ -57,21 +61,35 @@ function addRanges() {
     }
 }
 
+function addHeaders() {
+    let gameHeaders = '';
+    for (let gameNumber in games) {
+        if (!hasBeenPlayed(gameNumber)) {
+            gameHeaders = gameHeaders + '<th class="header-' + gameNumber + '" colspan="2">#' + gameNumber + ' - ' + games[gameNumber] + '</th>';
+        }
+    }
+    $('.header-current').after(gameHeaders);
+}
+
 function addRow(player) {
-    $('#playerTableBody').append(
-        '<tr class="player-row" data-player="' + player.entryNumber + '">' +
-		'<td class="cell-rank text-end"></td>' +
-		'<!--td class="cell-entry text-end">' + player.entryNumber + '</td-->' +
-		'<td class="cell-user-name">' + player.userName + '</td>' +
-		'<td class="cell-total text-end">00:00:00</td>' +
-		'<td class="cell-to-next text-end"></td>' +
-		'<td class="cell-current text-end" data-seconds="' + player.currentScore + '">' + secondsToTime(player.currentScore) + '</td>' +
-		'<td class="cell-guess-325 text-end">' + player.guesses[325] + '</td>' +
-		'<td class="cell-game-325 text-end">0:00:00</td>' +
-		'<td class="cell-guess-329 text-end">' + player.guesses[329] + '</td>' +
-		'<td class="cell-game-329 text-end">0:00:00</td>' +
-		'<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
-		'</tr>');
+    let tableRow = '<tr class="player-row" data-player="' + player.entryNumber + '">' +
+                   		'<td class="cell-rank text-end"></td>' +
+                   		'<!--td class="cell-entry text-end">' + player.entryNumber + '</td-->' +
+                   		'<td class="cell-user-name">' + player.userName + '</td>' +
+                   		'<td class="cell-total text-end">00:00:00</td>' +
+                   		'<td class="cell-to-next text-end"></td>' +
+                   		'<td class="cell-current text-end" data-seconds="' + player.currentScore + '">' + secondsToTime(player.currentScore) + '</td>';
+    for (let gameNumber in games) {
+        if (!hasBeenPlayed(gameNumber)) {
+            tableRow = tableRow +
+                '<td class="cell-guess-' + gameNumber + ' text-end">' + player.guesses[gameNumber] + '</td>' +
+                '<td class="cell-game-' + gameNumber + ' text-end">0:00:00</td>';
+        }
+    }
+    tableRow = tableRow +
+        '<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
+        '</tr>';
+    $('#playerTableBody').append(tableRow);
 };
 
 function updateScores(game, propagate = true) {
@@ -213,6 +231,7 @@ players.push(new Player(28,"kiYubEE",{309:"2:15:36",310:"0:52:48",311:"4:21:09",
 
 $(document).ready(function() {
     addRanges();
+    addHeaders();
     for (const player of players) {
         updateMin(player.seconds(325), $('#range325'));
         updateMax(player.seconds(325), $('#range325'));
