@@ -38,6 +38,25 @@ function addMarker(value, userName, datalist) {
     datalist.append('<option value="' + value + '" label="' + secondsToTime(value) + '"></option>');
 };
 
+let games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
+let actualTimes = {309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"};
+
+function addRanges() {
+    for (let gameNumber in games) {
+        if (!(gameNumber in actualTimes)) {
+            $('#gameRanges').append(
+                '<div class="row">' +
+                '<span id="time' + gameNumber + '" class="col-2 col-md-1"></span>' +
+                '<label for="range' + gameNumber + '" class="form-label col-auto">#' + gameNumber + ' - ' + games[gameNumber] + '</label>' +
+                '</div>' +
+                '<div class="row">' +
+                '<input type="range" class="form-range time-range" id="range' + gameNumber + '" list="list' + gameNumber + '">' +
+                '<datalist id="list' + gameNumber + '"></datalist>' +
+                '</div>');
+        }
+    }
+}
+
 function addRow(player) {
     $('#playerTableBody').append(
         '<tr class="player-row" data-player="' + player.entryNumber + '">' +
@@ -162,8 +181,6 @@ function Player(entryNumber, userName, guesses) {
     };
 };
 
-let actualTimes = {309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"};
-
 let players = [];
 players.push(new Player(1,"pmcTRILOGY",{309:"1:30:00",310:"1:00:00",311:"4:30:00",312:"4:00:00",313:"15:00:00",314:"1:00:00",315:"4:00:00",316:"0:50:00",317:"1:30:00",318:"2:45:00",319:"2:15:00",320:"0:45:00",321:"10:00:00",322:"2:05:00",323:"1:30:00",324:"1:45:00",325:"4:00:00",326:"6:00:00",327:"24:00:00",328:"22:00:00",329:"25:00:00"}));
 players.push(new Player(2,"Inestimate",{309:"2:53:12",310:"0:25:47",311:"5:06:15",312:"4:52:01",313:"18:11:14",314:"3:30:00",315:"2:00:54",316:"0:46:46",317:"1:30:55",318:"5:33:24",319:"2:31:00",320:"17:55:11",321:"11:11:11",322:"2:45:42",323:"4:50:00",324:"2:00:00",325:"4:27:00",326:"5:57:55",327:"28:35:16",328:"27:27:27",329:"28:05:00"}));
@@ -195,6 +212,7 @@ players.push(new Player(27,"Asmodemus0",{309:"1:45:23",310:"1:23:45",311:"3:53:1
 players.push(new Player(28,"kiYubEE",{309:"2:15:36",310:"0:52:48",311:"4:21:09",312:"4:44:44",313:"19:06:09",314:"1:37:10",315:"1:10:37",316:"0:57:34",317:"1:47:22",318:"3:33:33",319:"2:39:57",320:"7:53:09",321:"8:00:08",322:"2:55:43",323:"3:07:07",324:"1:39:04",325:"4:44:44",326:"3:33:33",327:"27:27:27",328:"25:12:25",329:"26:52:21"}));
 
 $(document).ready(function() {
+    addRanges();
     for (const player of players) {
         updateMin(player.seconds(325), $('#range325'));
         updateMax(player.seconds(325), $('#range325'));
