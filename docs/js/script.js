@@ -40,33 +40,36 @@ function addMarker(value, userName, datalist) {
 
 let games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
 let actualTimes = {309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"};
+let upcomingGames = [];
 
 function hasBeenPlayed(game) {
     return game in actualTimes;
 }
 
+for (let gameNumber in games) {
+    if (!hasBeenPlayed(gameNumber)) {
+        upcomingGames.push(gameNumber);
+    }
+}
+
 function addRanges() {
-    for (let gameNumber in games) {
-        if (!hasBeenPlayed(gameNumber)) {
-            $('#gameRanges').append(
-                '<div class="row">' +
-                '<span id="time' + gameNumber + '" class="col-2 col-md-1"></span>' +
-                '<label for="range' + gameNumber + '" class="form-label col-auto">#' + gameNumber + ' - ' + games[gameNumber] + '</label>' +
-                '</div>' +
-                '<div class="row">' +
-                '<input type="range" class="form-range time-range" id="range' + gameNumber + '" list="list' + gameNumber + '">' +
-                '<datalist id="list' + gameNumber + '"></datalist>' +
-                '</div>');
-        }
+    for (let gameNumber of upcomingGames) {
+        $('#gameRanges').append(
+            '<div class="row">' +
+            '<span id="time' + gameNumber + '" class="col-2 col-md-1"></span>' +
+            '<label for="range' + gameNumber + '" class="form-label col-auto">#' + gameNumber + ' - ' + games[gameNumber] + '</label>' +
+            '</div>' +
+            '<div class="row">' +
+            '<input type="range" class="form-range time-range" id="range' + gameNumber + '" list="list' + gameNumber + '">' +
+            '<datalist id="list' + gameNumber + '"></datalist>' +
+            '</div>');
     }
 }
 
 function addHeaders() {
     let gameHeaders = '';
-    for (let gameNumber in games) {
-        if (!hasBeenPlayed(gameNumber)) {
-            gameHeaders = gameHeaders + '<th class="header-' + gameNumber + '" colspan="2">#' + gameNumber + ' - ' + games[gameNumber] + '</th>';
-        }
+    for (let gameNumber of upcomingGames) {
+        gameHeaders = gameHeaders + '<th class="header-' + gameNumber + '" colspan="2">#' + gameNumber + ' - ' + games[gameNumber] + '</th>';
     }
     $('.header-current').after(gameHeaders);
 }
@@ -79,12 +82,10 @@ function addRow(player) {
                    		'<td class="cell-total text-end">00:00:00</td>' +
                    		'<td class="cell-to-next text-end"></td>' +
                    		'<td class="cell-current text-end" data-seconds="' + player.currentScore + '">' + secondsToTime(player.currentScore) + '</td>';
-    for (let gameNumber in games) {
-        if (!hasBeenPlayed(gameNumber)) {
-            tableRow = tableRow +
-                '<td class="cell-guess-' + gameNumber + ' text-end">' + player.guesses[gameNumber] + '</td>' +
-                '<td class="cell-game-' + gameNumber + ' text-end">0:00:00</td>';
-        }
+    for (let gameNumber of upcomingGames) {
+        tableRow = tableRow +
+            '<td class="cell-guess-' + gameNumber + ' text-end">' + player.guesses[gameNumber] + '</td>' +
+            '<td class="cell-game-' + gameNumber + ' text-end">0:00:00</td>';
     }
     tableRow = tableRow +
         '<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td>' +
