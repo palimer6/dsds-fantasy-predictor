@@ -11,9 +11,9 @@ function secondsToTime(seconds) {
     return hour + ":" + (min.length < 2 ? "0" + min : min) + ":" + (sec.length < 2 ? "0" + sec : sec);
 };
 
-function updateLabel(value, timeSpan) {
-    let time = secondsToTime(value);
-    timeSpan.html(time);
+function updateLabel(gameNumber) {
+    let time = secondsToTime($('#range' + gameNumber).val());
+    $('#time' + gameNumber).html(time);
 };
 
 function updateMin(value, targetRange) {
@@ -38,9 +38,49 @@ function addMarker(value, userName, datalist) {
     datalist.append('<option value="' + value + '" label="' + secondsToTime(value) + '"></option>');
 };
 
-const games = {309:"My Baby Girl",310:"Toon-Doku",311:"Crash: Mind Over Mutant",312:"DK: Jungle Climber",313:"Lux-Pain",314:"Bleach: The Blade of Fate",315:"Princess Debut",316:"Poptropica Adventures",317:"Silly Bandz",318:"Warioware D.I.Y.",319:"Touch The Dead",320:"Diamond Trust of London",321:"Final Fantasy Crystal Chronicles: Echoes of Time",322:"Jackass: The Game",323:"Dreamworks Madagascar: Escape 2 Africa",324:"Spider-Man 2",325:"Spyro: Shadow Legacy",326:"Super Collapse 3",327:"Nostalgia",328:"Dragon Ball Z: Attack of the Saiyans",329:"Exit DS"};
+const games = {
+    309:"My Baby Girl",
+    310:"Toon-Doku",
+    311:"Crash: Mind Over Mutant",
+    312:"DK: Jungle Climber",
+    313:"Lux-Pain",
+    314:"Bleach: The Blade of Fate",
+    315:"Princess Debut",
+    316:"Poptropica Adventures",
+    317:"Silly Bandz",
+    318:"Warioware D.I.Y.",
+    319:"Touch The Dead",
+    320:"Diamond Trust of London",
+    321:"Final Fantasy Crystal Chronicles: Echoes of Time",
+    322:"Jackass: The Game",
+    323:"Dreamworks Madagascar: Escape 2 Africa",
+    324:"Spider-Man 2",
+    325:"Spyro: Shadow Legacy",
+    326:"Super Collapse 3",
+    327:"Nostalgia",
+    328:"Dragon Ball Z: Attack of the Saiyans",
+    329:"Exit DS"
+};
 const actualTimes = {
-    309:"1:01:58",310:"1:36:42",311:"5:42:15",312:"7:16:31",313:"29:04:11",314:"1:37:00",315:"4:42:13",316:"2:18:48",317:"1:11:07",318:"5:02:16",319:"2:12:25",320:"0:25:53",321:"12:27:56",322:"4:31:04",323:"2:22:44",324:"4:10:38",326:"7:41:09",327:"26:27:49",328:"27:15:54"
+    309:"1:01:58",
+    310:"1:36:42",
+    311:"5:42:15",
+    312:"7:16:31",
+    313:"29:04:11",
+    314:"1:37:00",
+    315:"4:42:13",
+    316:"2:18:48",
+    317:"1:11:07",
+    318:"5:02:16",
+    319:"2:12:25",
+    320:"0:25:53",
+    321:"12:27:56",
+    322:"4:31:04",
+    323:"2:22:44",
+    324:"4:10:38",
+    326:"7:41:09",
+    327:"26:27:49",
+    328:"27:15:54"
 };
 let upcomingGames = [];
 
@@ -259,7 +299,7 @@ $(document).ready(function() {
         if (firstInput) {
             firstInput = false;
             for (let gameNumber of upcomingGames) {
-                updateLabel($('#range' + gameNumber).val(), $('#time' + gameNumber));
+                updateLabel(gameNumber);
                 updateScores(gameNumber);
             }
             updateTotals();
@@ -269,7 +309,7 @@ $(document).ready(function() {
 
     $('.time-range').on('input', function() {
         let gameNumber = $(this).attr('data-game');
-        updateLabel($(this).val(), $('#time' + gameNumber));
+        updateLabel(gameNumber);
         updateScores(gameNumber);
         updateTotals();
         sortTable();
