@@ -1,9 +1,21 @@
+/**
+ * Util
+ * Converts a string of the format h:mm:ss into seconds.
+ * @param {string} time
+ * @returns the amount of seconds in the given time string.
+ */
 function timeToSeconds(time) {
     let regex = /(\d{1,2}):(\d{2}):(\d{2})/g;
     let arr = regex.exec(time);
     return arr[1] * 3600 + arr[2] * 60 + arr[3] * 1;
 };
 
+/**
+ * Util
+ * Converts an amount of seconds into the format h:mm:ss.
+ * @param {number} seconds
+ * @returns the time string equal to the given amount of seconds.
+ */
 function secondsToTime(seconds) {
     let sec = "" + seconds % 60;
     let min = "" + (Math.floor(seconds / 60)) % 60;
@@ -11,31 +23,65 @@ function secondsToTime(seconds) {
     return hour + ":" + (min.length < 2 ? "0" + min : min) + ":" + (sec.length < 2 ? "0" + sec : sec);
 };
 
+/**
+ * UI
+ * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
+ * @param {number} gameNumber the number to be appended to 'range' and 'time' to find the elements with the corresponding IDs
+ */
 function updateLabel(gameNumber) {
     let time = secondsToTime($(`#range${gameNumber}`).val());
     $(`#time${gameNumber}`).html(time);
 };
 
-function updateMin(value, targetRange) {
+/**
+ * UI
+ * 
+ * @param {Player} player 
+ * @param {number} gameNumber 
+ */
+function updateMin(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    let targetRange = $(`#range${gameNumber}`);
     if (targetRange.attr('min') === undefined || value < targetRange.attr('min')) {
         targetRange.attr('min', value);
     }
 };
 
-function updateMax(value, targetRange) {
+/**
+ * UI
+ * 
+ * @param {Player} player 
+ * @param {number} gameNumber 
+ */
+function updateMax(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    let targetRange = $(`#range${gameNumber}`);
     if (targetRange.attr('max') === undefined || value > targetRange.attr('max')) {
         targetRange.attr('max', value);
     }
 };
 
-function getRangeMiddle(game) {
-    let min = Number($(`#range${game}`).attr('min'));
-    let max = Number($(`#range${game}`).attr('max'));
+/**
+ * UI
+ * 
+ * @param {number} gameNumber 
+ * @returns 
+ */
+function getRangeMiddle(gameNumber) {
+    let min = Number($(`#range${gameNumber}`).attr('min'));
+    let max = Number($(`#range${gameNumber}`).attr('max'));
     return Math.round((min + max) / 2);
 }
 
-function addMarker(value, userName, datalist) {
-    datalist.append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
+/**
+ * UI
+ * 
+ * @param {Player} player 
+ * @param {number} gameNumber 
+ */
+function addMarker(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    $(`#list${gameNumber}`).append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
 };
 
 const games = {
@@ -61,6 +107,7 @@ const games = {
     328: "Dragon Ball Z: Attack of the Saiyans",
     329: "Exit DS"
 };
+
 const actualTimes = {
     309: "1:01:58",
     310: "1:36:42",
@@ -82,10 +129,17 @@ const actualTimes = {
     327: "26:27:49",
     328: "27:15:54"
 };
+
 let upcomingGames = [];
 
-function hasBeenPlayed(game) {
-    return game in actualTimes;
+/**
+ * Util
+ * 
+ * @param {number} gameNumber 
+ * @returns 
+ */
+function hasBeenPlayed(gameNumber) {
+    return gameNumber in actualTimes;
 }
 
 for (let gameNumber in games) {
@@ -94,11 +148,17 @@ for (let gameNumber in games) {
     }
 }
 
+/**
+ * The highest allowed number of rows of ranges. This
+ */
 const MAX_RANGE_ROWS = 5;
 const rowSizes = [1, 2, 3, 4, 6, 12];
 
-function addRanges() {
-    let upcomingSize = upcomingGames.length;
+/**
+ * Creation
+ * Creates range inputs with labels to the document for all games in {@link upcomingGames}.
+ */
+function createRanges() {
     let chosenSize;
     for (let rowSize of rowSizes) {
         if (rowSize * MAX_RANGE_ROWS >= upcomingGames.length) {
@@ -113,7 +173,6 @@ function addRanges() {
         slices.push(upcomingGames.slice(sliceStart, sliceStart + chosenSize));
         sliceStart += chosenSize;
     }
-    let rows = '';
     for (let slice of slices) {
         let timeRow = '<div class="row">';
         let titleRow = '<div class="row">';
@@ -140,7 +199,11 @@ function addRanges() {
     }
 }
 
-function addHeaders() {
+/**
+ * Creation
+ * Creates 2 colspan headers for all games in {@link upcomingGames}.
+ */
+function createGameHeaders() {
     let gameHeaders = '';
     for (let gameNumber of upcomingGames) {
         gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${games[gameNumber]}</th>`;
@@ -148,33 +211,52 @@ function addHeaders() {
     $('.header-current').after(gameHeaders);
 }
 
-function addRow(player) {
-    let rowBeginning = `<tr class="player-row" data-player="${player.entryNumber}">
-        <td class="cell-rank text-end"></td>
-        <!--td class="cell-entry text-end">${player.entryNumber}</td-->
-        <td class="cell-user-name">${player.userName}</td>
-        <td class="cell-total text-end">00:00:00</td>
-        <td class="cell-to-next text-end"></td>
-        <td class="cell-current text-end" data-seconds="${player.currentScore}">${secondsToTime(player.currentScore)}</td>`;
+/**
+ * Creation
+ * Creates a new row for the given {@link Player} with their data also including their guess for all games in {@link upcomingGames}.
+ * @param {Player} player
+ */
+function createPlayerRow(player) {
+    let rowBeginning =
+        `<tr class="player-row" data-player="${player.entryNumber}">
+            <td class="cell-rank text-end"></td>
+            <!--td class="cell-entry text-end">${player.entryNumber}</td-->
+            <td class="cell-user-name">${player.userName}</td>
+            <td class="cell-total text-end">00:00:00</td>
+            <td class="cell-to-next text-end"></td>
+            <td class="cell-current text-end" data-seconds="${player.currentScore}">${secondsToTime(player.currentScore)}</td>`;
     let rowGames = '';
     for (let gameNumber of upcomingGames) {
-        rowGames = `${rowGames}<td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
+        rowGames = `${rowGames}
+            <td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
             <td class="cell-game-${gameNumber} text-end">0:00:00</td>`;
     }
-    let rowEnd = '<td class="cell-set"><button class="set-button btn btn-secondary btn-sm">Set</button></td></tr>';
+    let rowEnd = '<td class="cell-set">' +
+        '<button class="set-button btn btn-secondary btn-sm">Set</button>' +
+        '</td>' +
+        '</tr>';
     $('#playerTableBody').append(rowBeginning + rowGames + rowEnd);
 };
 
-function updateScores(game) {
-    let value = $(`#range${game}`).val();
+/**
+ * UI
+ * 
+ * @param {number} gameNumber 
+ */
+function updateScores(gameNumber) {
+    let value = $(`#range${gameNumber}`).val();
     for (const player of players) {
-        let score = Math.abs(value - player.seconds(game));
-        let target = $(`tr[data-player="${player.entryNumber}"] td.cell-game-${game}`);
+        let score = Math.abs(value - player.seconds(gameNumber));
+        let target = $(`tr[data-player="${player.entryNumber}"] td.cell-game-${gameNumber}`);
         target.attr('data-seconds', score);
         target.html(secondsToTime(score));
     }
 };
 
+/**
+ * UI
+ * 
+ */
 function updateTotals() {
     $('.player-row').each(function (e) {
         let total = Number($(this).find('td.cell-current').attr('data-seconds'));
@@ -186,6 +268,11 @@ function updateTotals() {
     });
 };
 
+/**
+ * UI
+ * 
+ * @param {string} cellClass 
+ */
 function sortTable(cellClass = 'cell-total') {
     let switching = true;
     while (switching) {
@@ -212,6 +299,11 @@ function sortTable(cellClass = 'cell-total') {
 
 let duplicateRanks = new Set();
 
+/**
+ * UI
+ * 
+ * @param {string} checkClass 
+ */
 function updateRanks(checkClass = 'cell-total') {
     duplicateRanks.clear();
     let i = 1;
@@ -236,6 +328,11 @@ function updateRanks(checkClass = 'cell-total') {
     });
 };
 
+/**
+ * UI
+ * 
+ * @returns 
+ */
 function checkDuplicateRanks() {
     $('#playerTableBody tr.player-row').removeClass('duplicate-rank');
     if (duplicateRanks.size === 0) {
@@ -249,6 +346,12 @@ function checkDuplicateRanks() {
     });
 };
 
+/**
+ * Util
+ * 
+ * @param {object} guesses 
+ * @returns 
+ */
 function calculateScore(guesses) {
     let score = 0;
     for (game in guesses) {
@@ -263,14 +366,16 @@ function calculateScore(guesses) {
     return score;
 }
 
-function Player(entryNumber, userName, guesses) {
-    this.entryNumber = entryNumber;
-    this.userName = userName;
-    this.guesses = guesses;
-    this.currentScore = calculateScore(guesses);
-    this.seconds = function (game) {
-        return timeToSeconds(guesses[game]);
-    };
+class Player {
+    constructor(entryNumber, userName, guesses) {
+        this.entryNumber = entryNumber;
+        this.userName = userName;
+        this.guesses = guesses;
+        this.currentScore = calculateScore(guesses);
+        this.seconds = function (game) {
+            return timeToSeconds(guesses[game]);
+        };
+    }
 };
 
 let players = [];
@@ -304,15 +409,15 @@ players.push(new Player(27, "Asmodemus0", { 309: "1:45:23", 310: "1:23:45", 311:
 players.push(new Player(28, "kiYubEE", { 309: "2:15:36", 310: "0:52:48", 311: "4:21:09", 312: "4:44:44", 313: "19:06:09", 314: "1:37:10", 315: "1:10:37", 316: "0:57:34", 317: "1:47:22", 318: "3:33:33", 319: "2:39:57", 320: "7:53:09", 321: "8:00:08", 322: "2:55:43", 323: "3:07:07", 324: "1:39:04", 325: "4:44:44", 326: "3:33:33", 327: "27:27:27", 328: "25:12:25", 329: "26:52:21" }));
 
 $(document).ready(function () {
-    addRanges();
-    addHeaders();
+    createRanges();
+    createGameHeaders();
     for (const player of players) {
         for (let gameNumber of upcomingGames) {
-            updateMin(player.seconds(gameNumber), $(`#range${gameNumber}`));
-            updateMax(player.seconds(gameNumber), $(`#range${gameNumber}`));
-            addMarker(player.seconds(gameNumber), player.userName, $(`#list${gameNumber}`));
+            updateMin(player, gameNumber);
+            updateMax(player, gameNumber);
+            addMarker(player, gameNumber);
         }
-        addRow(player);
+        createPlayerRow(player);
     }
     //    $('#range325').val(13950).trigger('input');
     //    $('#range328').val(80650).trigger('input');
