@@ -33,11 +33,26 @@ tr.player-row.highlighted {
     visibility: collapse;
 }
 
-.float {
+.float-ne {
     position: fixed;
     top: 10px;
     right: 10px;
     z-index: 1;
+}
+
+.float-nw {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
+
+.float-center {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    right: 50px;
+    z-index: 2;
 }
 
 .transparent {

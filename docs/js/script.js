@@ -549,4 +549,56 @@ $(document).ready(function () {
             $(this).parent().addClass('highlighted');
         }
     });
+
+    /**
+     * Whether the info box is currently shown.
+     * @type {boolean}
+     */
+    let infoShown = false;
+
+    /**
+     * Toggle the info box when the info button is clicked.
+     */
+    $('#infoButton').on('click', function (e) {
+        e.stopPropagation();
+        if (infoShown) {
+            hideInfo();
+        } else {
+            showInfo();
+        }
+    });
+
+    /**
+     * Hide the info box if anywhere but the info box is clicked.
+     */
+    $('body').on('click', function (e) {
+        if (!infoShown) {
+            return;
+        }
+        if (!$("#infoCard").is(e.target) && $("#infoCard").has(e.target).length === 0) {
+            hideInfo();
+        }
+    });
+
+    /**
+     * Show the info box and bind hiding the info box to the escape key.
+     */
+    function showInfo() {
+        $('#infoCard').show(200);
+        infoShown = true;
+        $(document).on('keydown.escape_info', function (e) {
+            if (e.key === 'Escape') {
+                hideInfo();
+            }
+        });
+    };
+
+    /**
+     * Hide the info box and unbind hiding the info box from the escape key.
+     */
+    function hideInfo() {
+        $('#infoCard').hide(200);
+        infoShown = false;
+        $(document).unbind('keydown.escape_info');
+    };
 });
