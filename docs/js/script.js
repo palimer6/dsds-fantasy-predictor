@@ -72,7 +72,7 @@ const UPCOMING_GAMES = function () {
     let upcomingList = [];
     for (const gameNumber in GAMES) {
         if (!(gameNumber in ACTUAL_TIMES)) {
-            upcomingList.push(gameNumber);
+            upcomingList.push(Number(gameNumber));
         }
     }
     return upcomingList;
@@ -211,7 +211,7 @@ function createRanges() {
     }
     let gridColSize = 12 / chosenSize;
     for (const gameNumber of UPCOMING_GAMES) {
-        let rangeBlock = 
+        let rangeBlock =
             `<div class="d-flex flex-column col-12 col-lg-${gridColSize}">
                 <p class="mb-1">Time: <span id="time${gameNumber}">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</span></p>
                 <div class="d-flex flex-grow-1 justify-content-between align-items-start">
@@ -299,8 +299,8 @@ function createPlayerRow(player) {
     let rowGames = '';
     for (const gameNumber of UPCOMING_GAMES) {
         rowGames = `${rowGames}
-            <td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
-            <td class="cell-game-${gameNumber} text-end" data-seconds="0">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>`;
+            <td class="cell-guess cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
+            <td class="cell-game cell-game-${gameNumber} text-end" data-game="${gameNumber}" data-seconds="0">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>`;
     }
     let rowEnd = '<td class="cell-set">' +
         '<button class="set-button btn btn-secondary btn-sm">Set</button>' +
@@ -493,7 +493,7 @@ $(document).ready(function () {
     /**
      * Resets labels and scores for the range's game and updates totals, sorting, ranks, and duplicate ranks for the whole table.
      */
-    $('.reset-button').on('click', function() {
+    $('.reset-button').on('click', function () {
         let gameNumber = Number($(this).attr('data-game'));
         $(`#time${gameNumber}`).html('&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;');
         centerRange(gameNumber);
@@ -513,10 +513,22 @@ $(document).ready(function () {
      */
     $('tr.player-row td.cell-set .set-button').on('click', function (e) {
         e.stopPropagation();
+        let partialMode = e.shiftKey;
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
+        let skipGames = [];
+        if (partialMode) {
+            $('tr.player-row[data-player="' + entryNumber + '"] td.cell-game').each(function () {
+                if (Number($(this).attr('data-seconds')) != 0) {
+                    skipGames.push(Number($(this).attr('data-game')));
+                }
+            });
+        }
         for (const player of players) {
             if (player.entryNumber === entryNumber) {
                 for (const gameNumber of UPCOMING_GAMES) {
+                    if (partialMode && skipGames.includes(gameNumber)) {
+                        continue;
+                    }
                     $(`#range${gameNumber}`)
                         .val(player.seconds(gameNumber))
                         .trigger('input');
