@@ -1,5 +1,6 @@
 /**
  * Util
+ * 
  * Converts a string of the format h:mm:ss into seconds.
  * @param {string} time
  * @returns the amount of seconds in the given time string.
@@ -12,6 +13,7 @@ function timeToSeconds(time) {
 
 /**
  * Util
+ * 
  * Converts an amount of seconds into the format h:mm:ss.
  * @param {number} seconds
  * @returns the time string equal to the given amount of seconds.
@@ -25,6 +27,7 @@ function secondsToTime(seconds) {
 
 /**
  * UI
+ * 
  * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
  * @param {number} gameNumber the number to be appended to 'range' and 'time' to find the elements with the corresponding IDs
  */
@@ -84,6 +87,9 @@ function addMarker(player, gameNumber) {
     $(`#list${gameNumber}`).append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
 };
 
+/**
+ * Map that assigns game titles to gameNumbers.
+ */
 const games = {
     309: "My Baby Girl",
     310: "Toon-Doku",
@@ -108,6 +114,9 @@ const games = {
     329: "Exit DS"
 };
 
+/**
+ * Map that assigns the time strings of the actual times that were taken to beat a game to gameNumbers.
+ */
 const actualTimes = {
     309: "1:01:58",
     310: "1:36:42",
@@ -130,7 +139,10 @@ const actualTimes = {
     328: "27:15:54"
 };
 
-let upcomingGames = [];
+/**
+ * Array of gameNumbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
+ */
+const upcomingGames = getUpcomingGames();
 
 /**
  * Util
@@ -140,22 +152,37 @@ let upcomingGames = [];
  */
 function hasBeenPlayed(gameNumber) {
     return gameNumber in actualTimes;
-}
-
-for (let gameNumber in games) {
-    if (!hasBeenPlayed(gameNumber)) {
-        upcomingGames.push(gameNumber);
-    }
-}
+};
 
 /**
- * The highest allowed number of rows of ranges. This
+ * Util
+ * 
+ * @returns 
+ */
+function getUpcomingGames() {
+    let upcomingGamesList = [];
+    for (let gameNumber in games) {
+        if (!hasBeenPlayed(gameNumber)) {
+            upcomingGamesList.push(gameNumber);
+        }
+    }
+    return upcomingGamesList;
+};
+
+
+/**
+ * The highest allowed number of rows of ranges.
  */
 const MAX_RANGE_ROWS = 5;
+
+/**
+ * All possible number of ranges allowed in one row. These should not be changed as they correspond to bootstrap grid sizes.
+ */
 const rowSizes = [1, 2, 3, 4, 6, 12];
 
 /**
  * Creation
+ * 
  * Creates range inputs with labels to the document for all games in {@link upcomingGames}.
  */
 function createRanges() {
@@ -201,6 +228,7 @@ function createRanges() {
 
 /**
  * Creation
+ * 
  * Creates 2 colspan headers for all games in {@link upcomingGames}.
  */
 function createGameHeaders() {
@@ -213,6 +241,7 @@ function createGameHeaders() {
 
 /**
  * Creation
+ * 
  * Creates a new row for the given {@link Player} with their data also including their guess for all games in {@link upcomingGames}.
  * @param {Player} player
  */
@@ -367,6 +396,12 @@ function calculateScore(guesses) {
 }
 
 class Player {
+    /**
+     * 
+     * @param {number} entryNumber 
+     * @param {string} userName 
+     * @param {object} guesses 
+     */
     constructor(entryNumber, userName, guesses) {
         this.entryNumber = entryNumber;
         this.userName = userName;
