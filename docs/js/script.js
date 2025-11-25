@@ -2,7 +2,7 @@
  * Map that assigns game titles to game numbers.
  * @type {Object.<number, string>}
  */
-const games = {
+const GAMES = {
     309: "My Baby Girl",
     310: "Toon-Doku",
     311: "Crash: Mind Over Mutant",
@@ -30,7 +30,7 @@ const games = {
  * Map that assigns the time strings of the actual times that were taken to beat a game to game numbers.
  * @type {Object.<number, string>}
  */
-const actualTimes = {
+const ACTUAL_TIMES = {
     309: "1:01:58",
     310: "1:36:42",
     311: "5:42:15",
@@ -62,16 +62,16 @@ const MAX_RANGE_ROWS = 5;
  * All possible number of ranges allowed in one row. These should not be changed as they correspond to bootstrap grid sizes.
  * @type {number[]} 
 */
-const rowSizes = [1, 2, 3, 4, 6, 12];
+const ROW_SIZES = [1, 2, 3, 4, 6, 12];
 
 /**
- * Array of game numbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
+ * Array of game numbers that are in {@link GAMES} but not in {@link ACTUAL_TIMES}, meaning they are yet to be finished.
  * @type {number[]}
  */
-const upcomingGames = function () {
+const UPCOMING_GAMES = function () {
     let upcomingList = [];
-    for (const gameNumber in games) {
-        if (!(gameNumber in actualTimes)) {
+    for (const gameNumber in GAMES) {
+        if (!(gameNumber in ACTUAL_TIMES)) {
             upcomingList.push(gameNumber);
         }
     }
@@ -108,16 +108,16 @@ function secondsToTime(seconds) {
 /**
  * Util
  * 
- * Calculates the score in seconds based on the differences between a map of guessed times and their times in {@link actualTimes}. Game numbers not in {@link actualTimes} are ignored.
+ * Calculates the score in seconds based on the differences between a map of guessed times and their times in {@link ACTUAL_TIMES}. Game numbers not in {@link ACTUAL_TIMES} are ignored.
  * @param {object} guesses Map of numbers to time strings representing the times a {@link Player} guessed for a given game number.
- * @returns {number} the score in seconds this set of guesses achieved compared to {@link actualTimes}.
+ * @returns {number} the score in seconds this set of guesses achieved compared to {@link ACTUAL_TIMES}.
  */
 function calculateScore(guesses) {
     let score = 0;
     for (const gameNumber in guesses) {
         let guess = guesses[gameNumber];
-        let actualTime = actualTimes[gameNumber];
-        if (gameNumber in actualTimes) {
+        let actualTime = ACTUAL_TIMES[gameNumber];
+        if (gameNumber in ACTUAL_TIMES) {
             score += Math.abs(timeToSeconds(actualTime) - timeToSeconds(guess));
         } else {
             continue;
@@ -149,7 +149,7 @@ class Player {
          */
         this.guesses = guesses;
         /**
-         * @member {number} currentScore The score in seconds this player has achieved for the games that are in {@link actualTimes}.
+         * @member {number} currentScore The score in seconds this player has achieved for the games that are in {@link ACTUAL_TIMES}.
          */
         this.currentScore = calculateScore(guesses);
         /**
@@ -208,7 +208,7 @@ function updateLabel(gameNumber) {
 };
 
 /**
- * UI
+ * UI Creation
  * 
  * Takes the guess the given {@link Player} gave for the given game number and expands the min attribute of the corresponding range if it is lower than the current value.
  * @param {Player} player
@@ -223,7 +223,7 @@ function updateMin(player, gameNumber) {
 };
 
 /**
- * UI
+ * UI Creation
  * 
  * Takes the guess the given {@link Player} gave for the given game number and expands the max attribute of the corresponding range if it is greater than the current value.
  * @param {Player} player
@@ -238,7 +238,7 @@ function updateMax(player, gameNumber) {
 };
 
 /**
- * UI
+ * UI Creation
  * 
  * Takes the values in the min and max attributes of the range corresponding to the given game number and calculates the average of the two.
  * @param {number} gameNumber
@@ -251,7 +251,7 @@ function getRangeMiddle(gameNumber) {
 }
 
 /**
- * UI
+ * UI Creation
  * 
  * Adds an option tag to the corresponding datalist of the given game number for the corresponding guess the given {@link Player} gave.
  * This is used to give a marker to the game's range.
@@ -264,14 +264,14 @@ function addMarker(player, gameNumber) {
 };
 
 /**
- * Creation
+ * UI Creation
  * 
- * Creates range inputs with labels for all games in {@link upcomingGames}.
+ * Creates range inputs with labels for all games in {@link UPCOMING_GAMES}.
  */
 function createRanges() {
     let chosenSize;
-    for (const rowSize of rowSizes) {
-        if (rowSize * MAX_RANGE_ROWS >= upcomingGames.length) {
+    for (const rowSize of ROW_SIZES) {
+        if (rowSize * MAX_RANGE_ROWS >= UPCOMING_GAMES.length) {
             chosenSize = rowSize;
             break;
         }
@@ -279,8 +279,8 @@ function createRanges() {
     let gridColSize = 12 / chosenSize;
     let slices = [];
     let sliceStart = 0;
-    while (sliceStart < upcomingGames.length) {
-        slices.push(upcomingGames.slice(sliceStart, sliceStart + chosenSize));
+    while (sliceStart < UPCOMING_GAMES.length) {
+        slices.push(UPCOMING_GAMES.slice(sliceStart, sliceStart + chosenSize));
         sliceStart += chosenSize;
     }
     for (const slice of slices) {
@@ -294,7 +294,7 @@ function createRanges() {
                 </div>`;
             titleRow = `${titleRow}
                 <div class="col-${gridColSize}">
-                    <label for="range${gameNumber}" class="form-label">#${gameNumber} - ${games[gameNumber]}</label>
+                    <label for="range${gameNumber}" class="form-label">#${gameNumber} - ${GAMES[gameNumber]}</label>
                 </div>`;
             rangeRow = `${rangeRow}
                 <div class="col-${gridColSize}">
@@ -310,22 +310,22 @@ function createRanges() {
 }
 
 /**
- * Creation
+ * UI Creation
  * 
- * Creates 2 colspan headers for all games in {@link upcomingGames}.
+ * Creates 2 colspan headers for all games in {@link UPCOMING_GAMES}.
  */
 function createGameHeaders() {
     let gameHeaders = '';
-    for (const gameNumber of upcomingGames) {
-        gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${games[gameNumber]}</th>`;
+    for (const gameNumber of UPCOMING_GAMES) {
+        gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${GAMES[gameNumber]}</th>`;
     }
     $('.header-current').after(gameHeaders);
 }
 
 /**
- * Creation
+ * UI Creation
  * 
- * Creates a new row for the given {@link Player} with their data including their guess for all games in {@link upcomingGames}.
+ * Creates a new row for the given {@link Player} with their data including their guess for all games in {@link UPCOMING_GAMES}.
  * @param {Player} player
  */
 function createPlayerRow(player) {
@@ -338,7 +338,7 @@ function createPlayerRow(player) {
             <td class="cell-to-next text-end"></td>
             <td class="cell-current text-end" data-seconds="${player.currentScore}">${secondsToTime(player.currentScore)}</td>`;
     let rowGames = '';
-    for (const gameNumber of upcomingGames) {
+    for (const gameNumber of UPCOMING_GAMES) {
         rowGames = `${rowGames}
             <td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
             <td class="cell-game-${gameNumber} text-end">0:00:00</td>`;
@@ -374,7 +374,7 @@ function updateScores(gameNumber) {
 function updateTotals() {
     $('.player-row').each(function (e) {
         let total = Number($(this).find('td.cell-current').attr('data-seconds'));
-        for (const upcomingGame of upcomingGames) {
+        for (const upcomingGame of UPCOMING_GAMES) {
             let score = Number($(this).find(`td.cell-game-${upcomingGame}`).attr('data-seconds'));
             total += score;
         }
@@ -474,7 +474,7 @@ $(document).ready(function () {
     createRanges();
     createGameHeaders();
     for (const player of players) {
-        for (const gameNumber of upcomingGames) {
+        for (const gameNumber of UPCOMING_GAMES) {
             updateMin(player, gameNumber);
             updateMax(player, gameNumber);
             addMarker(player, gameNumber);
@@ -484,7 +484,7 @@ $(document).ready(function () {
     //    $('#range325').val(13950).trigger('input');
     //    $('#range328').val(80650).trigger('input');
     //    $('#range329').val(42755).trigger('input');
-    for (const gameNumber of upcomingGames) {
+    for (const gameNumber of UPCOMING_GAMES) {
         $(`#range${gameNumber}`).val(getRangeMiddle(gameNumber));
     }
     sortTable('cell-current');
@@ -495,7 +495,7 @@ $(document).ready(function () {
     $('.time-range').on('input', function () {
         if (firstInput) {
             firstInput = false;
-            for (let gameNumber of upcomingGames) {
+            for (let gameNumber of UPCOMING_GAMES) {
                 updateLabel(gameNumber);
                 updateScores(gameNumber);
             }
@@ -519,7 +519,7 @@ $(document).ready(function () {
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
         for (const player of players) {
             if (player.entryNumber === entryNumber) {
-                for (const gameNumber of upcomingGames) {
+                for (const gameNumber of UPCOMING_GAMES) {
                     $(`#range${gameNumber}`)
                         .val(player.seconds(gameNumber))
                         .trigger('input');
