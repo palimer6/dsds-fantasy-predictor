@@ -365,6 +365,7 @@ let duplicateRanks = new Set();
  * Iterates through all rows in the table and sequentially adds their rank number.
  * If the data-seconds attribute of the cell with the given class holds the same value as the previous row, the same rank number is applied.
  * Also clears the current contents of {@link duplicateRanks} and adds all duplicate ranks to it.
+ * Also fills the to-next column with the difference to the row above.
  * @param {string} checkClass The class of the td tag which should have its data-seconds attribute be used for duplicate score checking. 'cell-total' is used in case nothing is given.
  */
 function updateRanks(checkClass = 'cell-total') {
