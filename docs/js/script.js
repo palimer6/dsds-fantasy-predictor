@@ -214,7 +214,10 @@ function createRanges() {
         let rangeBlock = 
             `<div class="d-flex flex-column col-12 col-lg-${gridColSize}">
                 <p class="mb-1">Time: <span id="time${gameNumber}">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</span></p>
-                <label for="range${gameNumber}" class="form-label flex-grow-1">#${gameNumber} - ${GAMES[gameNumber]}</label>
+                <div class="d-flex flex-grow-1 justify-content-between align-items-start">
+                    <label for="range${gameNumber}" class="form-label">#${gameNumber} - ${GAMES[gameNumber]}</label>
+                    <button id="reset${gameNumber}" class="btn btn-secondary btn-sm reset-button" data-game="${gameNumber}">Reset</button>
+                </div>
                 <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
                 <datalist id="list${gameNumber}"></datalist>
             </div>`;
@@ -480,6 +483,24 @@ $(document).ready(function () {
         let gameNumber = $(this).attr('data-game');
         updateLabel(gameNumber);
         updateScores(gameNumber);
+        updateTotals();
+        sortTable();
+        updateRanks();
+        checkDuplicateRanks();
+    });
+
+    /**
+     * Resets labels and scores for the range's game and updates totals, sorting, ranks, and duplicate ranks for the whole table.
+     */
+    $('.reset-button').on('click', function() {
+        let gameNumber = Number($(this).attr('data-game'));
+        $(`#time${gameNumber}`).html('&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;');
+        centerRange(gameNumber);
+        for (const player of players) {
+            let target = $(`tr[data-player="${player.entryNumber}"] td.cell-game-${gameNumber}`);
+            target.attr('data-seconds', 0);
+            target.html('&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;');
+        }
         updateTotals();
         sortTable();
         updateRanks();
