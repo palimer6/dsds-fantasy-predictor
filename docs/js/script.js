@@ -65,7 +65,7 @@ const rowSizes = [1, 2, 3, 4, 6, 12];
  */
 const upcomingGames = function() {
     let upcomingList = [];
-    for (let gameNumber in games) {
+    for (const gameNumber in games) {
         if (!(gameNumber in actualTimes)) {
             upcomingList.push(gameNumber);
         }
@@ -110,10 +110,10 @@ function secondsToTime(seconds) {
  */
 function calculateScore(guesses) {
     let score = 0;
-    for (game in guesses) {
-        let guess = guesses[game];
-        let actualTime = actualTimes[game];
-        if (game in actualTimes) {
+    for (const gameNumber in guesses) {
+        let guess = guesses[gameNumber];
+        let actualTime = actualTimes[gameNumber];
+        if (gameNumber in actualTimes) {
             score += Math.abs(timeToSeconds(actualTime) - timeToSeconds(guess));
         } else {
             continue;
@@ -191,7 +191,7 @@ function addMarker(player, gameNumber) {
  */
 function createRanges() {
     let chosenSize;
-    for (let rowSize of rowSizes) {
+    for (const rowSize of rowSizes) {
         if (rowSize * MAX_RANGE_ROWS >= upcomingGames.length) {
             chosenSize = rowSize;
             break;
@@ -204,23 +204,23 @@ function createRanges() {
         slices.push(upcomingGames.slice(sliceStart, sliceStart + chosenSize));
         sliceStart += chosenSize;
     }
-    for (let slice of slices) {
+    for (const slice of slices) {
         let timeRow = '<div class="row">';
         let titleRow = '<div class="row">';
         let rangeRow = '<div class="row">';
-        for (let game of slice) {
+        for (const gameNumber of slice) {
             timeRow = `${timeRow}
                 <div class="col-${gridColSize}">
-                    <span id="time${game}"></span>
+                    <span id="time${gameNumber}"></span>
                 </div>`;
             titleRow = `${titleRow}
                 <div class="col-${gridColSize}">
-                    <label for="range${game}" class="form-label">#${game} - ${games[game]}</label>
+                    <label for="range${gameNumber}" class="form-label">#${gameNumber} - ${games[gameNumber]}</label>
                 </div>`;
             rangeRow = `${rangeRow}
                 <div class="col-${gridColSize}">
-                    <input type="range" class="form-range time-range" id="range${game}" list="list${game}" data-game="${game}">
-                    <datalist id="list${game}"></datalist>
+                    <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
+                    <datalist id="list${gameNumber}"></datalist>
                 </div>`;
         }
         timeRow = `${timeRow}</div>`;
@@ -237,7 +237,7 @@ function createRanges() {
  */
 function createGameHeaders() {
     let gameHeaders = '';
-    for (let gameNumber of upcomingGames) {
+    for (const gameNumber of upcomingGames) {
         gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${games[gameNumber]}</th>`;
     }
     $('.header-current').after(gameHeaders);
@@ -259,7 +259,7 @@ function createPlayerRow(player) {
             <td class="cell-to-next text-end"></td>
             <td class="cell-current text-end" data-seconds="${player.currentScore}">${secondsToTime(player.currentScore)}</td>`;
     let rowGames = '';
-    for (let gameNumber of upcomingGames) {
+    for (const gameNumber of upcomingGames) {
         rowGames = `${rowGames}
             <td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
             <td class="cell-game-${gameNumber} text-end">0:00:00</td>`;
@@ -293,7 +293,7 @@ function updateScores(gameNumber) {
 function updateTotals() {
     $('.player-row').each(function (e) {
         let total = Number($(this).find('td.cell-current').attr('data-seconds'));
-        for (let upcomingGame of upcomingGames) {
+        for (const upcomingGame of upcomingGames) {
             let score = Number($(this).find(`td.cell-game-${upcomingGame}`).attr('data-seconds'));
             total += score;
         }
@@ -431,7 +431,7 @@ $(document).ready(function () {
     createRanges();
     createGameHeaders();
     for (const player of players) {
-        for (let gameNumber of upcomingGames) {
+        for (const gameNumber of upcomingGames) {
             updateMin(player, gameNumber);
             updateMax(player, gameNumber);
             addMarker(player, gameNumber);
@@ -441,7 +441,7 @@ $(document).ready(function () {
     //    $('#range325').val(13950).trigger('input');
     //    $('#range328').val(80650).trigger('input');
     //    $('#range329').val(42755).trigger('input');
-    for (let gameNumber of upcomingGames) {
+    for (const gameNumber of upcomingGames) {
         $(`#range${gameNumber}`).val(getRangeMiddle(gameNumber));
     }
     sortTable('cell-current');
