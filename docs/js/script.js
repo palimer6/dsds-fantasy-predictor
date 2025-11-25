@@ -63,7 +63,15 @@ const rowSizes = [1, 2, 3, 4, 6, 12];
 /**
  * Array of gameNumbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
  */
-const upcomingGames = getUpcomingGames();
+const upcomingGames = function() {
+    let upcomingList = [];
+    for (let gameNumber in games) {
+        if (!(gameNumber in actualTimes)) {
+            upcomingList.push(gameNumber);
+        }
+    }
+    return upcomingList;
+}();
 
 
 /**
@@ -91,32 +99,6 @@ function secondsToTime(seconds) {
     let min = "" + (Math.floor(seconds / 60)) % 60;
     let hour = Math.floor(seconds / 3600);
     return hour + ":" + (min.length < 2 ? "0" + min : min) + ":" + (sec.length < 2 ? "0" + sec : sec);
-};
-
-/**
- * Util
- * 
- * 
- * @param {number} gameNumber 
- * @returns 
- */
-function hasBeenPlayed(gameNumber) {
-    return gameNumber in actualTimes;
-};
-
-/**
- * Util
- * 
- * @returns 
- */
-function getUpcomingGames() {
-    let upcomingGamesList = [];
-    for (let gameNumber in games) {
-        if (!(hasBeenPlayed(gameNumber))) {
-            upcomingGamesList.push(gameNumber);
-        }
-    }
-    return upcomingGamesList;
 };
 
 /**
