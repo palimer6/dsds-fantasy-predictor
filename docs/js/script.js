@@ -210,35 +210,15 @@ function createRanges() {
         }
     }
     let gridColSize = 12 / chosenSize;
-    let slices = [];
-    let sliceStart = 0;
-    while (sliceStart < UPCOMING_GAMES.length) {
-        slices.push(UPCOMING_GAMES.slice(sliceStart, sliceStart + chosenSize));
-        sliceStart += chosenSize;
-    }
-    for (const slice of slices) {
-        let timeRow = '<div class="row">';
-        let titleRow = '<div class="row">';
-        let rangeRow = '<div class="row">';
-        for (const gameNumber of slice) {
-            timeRow = `${timeRow}
-                <div class="col-${gridColSize}">
-                    <span id="time${gameNumber}"></span>
-                </div>`;
-            titleRow = `${titleRow}
-                <div class="col-${gridColSize}">
-                    <label for="range${gameNumber}" class="form-label">#${gameNumber} - ${GAMES[gameNumber]}</label>
-                </div>`;
-            rangeRow = `${rangeRow}
-                <div class="col-${gridColSize}">
-                    <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
-                    <datalist id="list${gameNumber}"></datalist>
-                </div>`;
-        }
-        timeRow = `${timeRow}</div>`;
-        titleRow = `${titleRow}</div>`;
-        rangeRow = `${rangeRow}</div>`;
-        $('#gameRanges').append(timeRow + titleRow + rangeRow);
+    for (const gameNumber of UPCOMING_GAMES) {
+        let rangeBlock = 
+            `<div class="d-flex flex-column col-12 col-lg-${gridColSize}">
+                <p class="mb-1" id="time${gameNumber}">-</p>
+                <label for="range${gameNumber}" class="form-label flex-grow-1">#${gameNumber} - ${GAMES[gameNumber]}</label>
+                <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
+                <datalist id="list${gameNumber}"></datalist>
+            </div>`;
+        $('#gameRanges').append(rangeBlock);
     }
 };
 
