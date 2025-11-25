@@ -102,6 +102,27 @@ function secondsToTime(seconds) {
 };
 
 /**
+ * Util
+ * 
+ * Calculates the score in seconds based on the differences between a map of guessed times and their times in {@link actualTimes}. Game numbers not in {@link actualTimes} are ignored.
+ * @param {object} guesses Map of numbers to time strings representing the times a {@link Player} guessed for a given game number.
+ * @returns the score in seconds this set of guesses achieved compared to {@link actualTimes}.
+ */
+function calculateScore(guesses) {
+    let score = 0;
+    for (game in guesses) {
+        let guess = guesses[game];
+        let actualTime = actualTimes[game];
+        if (game in actualTimes) {
+            score += Math.abs(timeToSeconds(actualTime) - timeToSeconds(guess));
+        } else {
+            continue;
+        }
+    }
+    return score;
+}
+
+/**
  * UI
  * 
  * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
@@ -357,26 +378,6 @@ function checkDuplicateRanks() {
         }
     });
 };
-
-/**
- * Util
- * 
- * @param {object} guesses 
- * @returns 
- */
-function calculateScore(guesses) {
-    let score = 0;
-    for (game in guesses) {
-        let guess = guesses[game];
-        let actualTime = actualTimes[game];
-        if (game in actualTimes) {
-            score += Math.abs(timeToSeconds(actualTime) - timeToSeconds(guess));
-        } else {
-            continue;
-        }
-    }
-    return score;
-}
 
 class Player {
     /**
