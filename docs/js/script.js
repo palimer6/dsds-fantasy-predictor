@@ -197,7 +197,7 @@ players.push(new Player(27, "Asmodemus0", { 309: "1:45:23", 310: "1:23:45", 311:
 players.push(new Player(28, "kiYubEE", { 309: "2:15:36", 310: "0:52:48", 311: "4:21:09", 312: "4:44:44", 313: "19:06:09", 314: "1:37:10", 315: "1:10:37", 316: "0:57:34", 317: "1:47:22", 318: "3:33:33", 319: "2:39:57", 320: "7:53:09", 321: "8:00:08", 322: "2:55:43", 323: "3:07:07", 324: "1:39:04", 325: "4:44:44", 326: "3:33:33", 327: "27:27:27", 328: "25:12:25", 329: "26:52:21" }));
 
 /**
- * UI
+ * UI Update
  * 
  * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
  * @param {number} gameNumber the number to be appended to 'range' and 'time' to find the elements with the corresponding IDs
@@ -351,7 +351,7 @@ function createPlayerRow(player) {
 };
 
 /**
- * UI
+ * UI Update
  * 
  * Updates every {@link Player}'s score for the given game number based on the value of the game's range and their guess.
  * @param {number} gameNumber
@@ -367,7 +367,7 @@ function updateScores(gameNumber) {
 };
 
 /**
- * UI
+ * UI Update
  * 
  * Updates every {@link Player}'s total score based on their current score and their scores for all upcoming games.
  */
@@ -383,7 +383,7 @@ function updateTotals() {
 };
 
 /**
- * UI
+ * UI Creation and Update
  * 
  * Takes the data-seconds attribute in the td tag with the given class in each row and sorts the table in ascending order based on it.
  * 
@@ -421,7 +421,7 @@ function sortTable(cellClass = 'cell-total') {
 let duplicateRanks = new Set();
 
 /**
- * UI
+ * UI Creation and Update
  * 
  * Iterates through all rows in the table and sequentially adds their rank number.
  * If the data-seconds attribute of the cell with the given class holds the same value as the previous row, the same rank number is applied.
@@ -453,7 +453,7 @@ function updateRanks(checkClass = 'cell-total') {
 };
 
 /**
- * UI
+ * UI Creation and Update
  * 
  * Adds the 'duplicate-rank' class to all rows that have a rank that is stored in {@link duplicateRanks}.
  */
@@ -471,6 +471,7 @@ function checkDuplicateRanks() {
 };
 
 $(document).ready(function () {
+    // UI Creation
     createRanges();
     createGameHeaders();
     for (const player of players) {
@@ -491,7 +492,16 @@ $(document).ready(function () {
     updateRanks('cell-current');
     checkDuplicateRanks();
 
+    // UI Updates
+    /**
+     * Whether no input has been taken thus far.
+     * @type {boolean}
+     */
     let firstInput = true;
+
+    /**
+     * Updates labels, scores, and totals for every game if {@link firstInput} is true.
+     */
     $('.time-range').on('input', function () {
         if (firstInput) {
             firstInput = false;
@@ -503,7 +513,9 @@ $(document).ready(function () {
         }
     });
 
-
+    /**
+     * Updates labels and scores for the range's game and updates totals, sorting, ranks, and duplicate ranks for the whole table.
+     */
     $('.time-range').on('input', function () {
         let gameNumber = $(this).attr('data-game');
         updateLabel(gameNumber);
@@ -514,6 +526,9 @@ $(document).ready(function () {
         checkDuplicateRanks();
     });
 
+    /**
+     * Sets the range values of all games to the guesses of this row's player.
+     */
     $('tr.player-row td.cell-set .set-button').on('click', function (e) {
         e.stopPropagation();
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
@@ -529,6 +544,9 @@ $(document).ready(function () {
         }
     });
 
+    /**
+     * Adds the 'highlighted' class to this row.
+     */
     $('tr.player-row td').on('click', function () {
         let isHighlighted = $(this).parent().hasClass('highlighted');
         if (isHighlighted) {
