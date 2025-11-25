@@ -1,6 +1,6 @@
 /**
- * Map that assigns game titles to gameNumbers.
- * @type {object}
+ * Map that assigns game titles to game numbers.
+ * @type {Object.<number, string>}
  */
 const games = {
     309: "My Baby Girl",
@@ -27,8 +27,8 @@ const games = {
 };
 
 /**
- * Map that assigns the time strings of the actual times that were taken to beat a game to gameNumbers.
- * @type {object}
+ * Map that assigns the time strings of the actual times that were taken to beat a game to game numbers.
+ * @type {Object.<number, string>}
  */
 const actualTimes = {
     309: "1:01:58",
@@ -54,16 +54,19 @@ const actualTimes = {
 
 /**
  * The highest allowed number of rows of ranges.
+ * @type {number}
  */
 const MAX_RANGE_ROWS = 5;
 
 /**
  * All possible number of ranges allowed in one row. These should not be changed as they correspond to bootstrap grid sizes.
- */
+ * @type {number[]} 
+*/
 const rowSizes = [1, 2, 3, 4, 6, 12];
 
 /**
- * Array of gameNumbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
+ * Array of game numbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
+ * @type {number[]}
  */
 const upcomingGames = function () {
     let upcomingList = [];
@@ -80,7 +83,7 @@ const upcomingGames = function () {
  * 
  * Converts a string of the format h:mm:ss into seconds.
  * @param {string} time
- * @returns the amount of seconds in the given time string.
+ * @returns {number} the amount of seconds in the given time string.
  */
 function timeToSeconds(time) {
     let regex = /(\d{1,2}):(\d{2}):(\d{2})/g;
@@ -93,7 +96,7 @@ function timeToSeconds(time) {
  * 
  * Converts an amount of seconds into the format h:mm:ss.
  * @param {number} seconds
- * @returns the time string equal to the given amount of seconds.
+ * @returns {string} the time string equal to the given amount of seconds.
  */
 function secondsToTime(seconds) {
     let sec = "" + seconds % 60;
@@ -107,7 +110,7 @@ function secondsToTime(seconds) {
  * 
  * Calculates the score in seconds based on the differences between a map of guessed times and their times in {@link actualTimes}. Game numbers not in {@link actualTimes} are ignored.
  * @param {object} guesses Map of numbers to time strings representing the times a {@link Player} guessed for a given game number.
- * @returns the score in seconds this set of guesses achieved compared to {@link actualTimes}.
+ * @returns {number} the score in seconds this set of guesses achieved compared to {@link actualTimes}.
  */
 function calculateScore(guesses) {
     let score = 0;
@@ -125,28 +128,43 @@ function calculateScore(guesses) {
 
 /**
  * A Player that has submitted guesses for this bracket.
- * @
  */
 class Player {
     /**
-     * 
-     * @param {number} entryNumber 
-     * @param {string} userName 
-     * @param {object} guesses 
+     * @param {number} entryNumber The entry number of this player.
+     * @param {string} userName The user name of this player.
+     * @param {Object.<number, string>} guesses The map of guessed times this player gave for each game number.
      */
     constructor(entryNumber, userName, guesses) {
+        /**
+         * @member {number} entryNumber
+         */
         this.entryNumber = entryNumber;
+        /**  
+         * @member {string} userName
+        */
         this.userName = userName;
+        /**
+         * @member {Object.<number, string>} guesses
+         */
         this.guesses = guesses;
+        /**
+         * @member {number} currentScore The score in seconds this player has achieved for the games that are in {@link actualTimes}.
+         */
         this.currentScore = calculateScore(guesses);
-        this.seconds = function (game) {
-            return timeToSeconds(guesses[game]);
+        /**
+         * @param {number} gameNumber
+         * @returns {number} the amount of seconds this player guessed for the game with the given game number.
+         */
+        this.seconds = function (gameNumber) {
+            return timeToSeconds(guesses[gameNumber]);
         };
     }
 };
 
 /**
  * The list of {@link Player}s that have submitted guesses for this bracket.
+ * @type {Player[]}
  */
 let players = [];
 players.push(new Player(1, "pmcTRILOGY", { 309: "1:30:00", 310: "1:00:00", 311: "4:30:00", 312: "4:00:00", 313: "15:00:00", 314: "1:00:00", 315: "4:00:00", 316: "0:50:00", 317: "1:30:00", 318: "2:45:00", 319: "2:15:00", 320: "0:45:00", 321: "10:00:00", 322: "2:05:00", 323: "1:30:00", 324: "1:45:00", 325: "4:00:00", 326: "6:00:00", 327: "24:00:00", 328: "22:00:00", 329: "25:00:00" }));
@@ -192,8 +210,9 @@ function updateLabel(gameNumber) {
 /**
  * UI
  * 
- * @param {Player} player 
- * @param {number} gameNumber 
+ * Takes the guess the given {@link Player} gave for the given game number and expands the min attribute of the corresponding range if it is lower than the current value.
+ * @param {Player} player
+ * @param {number} gameNumber
  */
 function updateMin(player, gameNumber) {
     let value = player.seconds(gameNumber);
@@ -206,8 +225,9 @@ function updateMin(player, gameNumber) {
 /**
  * UI
  * 
- * @param {Player} player 
- * @param {number} gameNumber 
+ * Takes the guess the given {@link Player} gave for the given game number and expands the max attribute of the corresponding range if it is greater than the current value.
+ * @param {Player} player
+ * @param {number} gameNumber
  */
 function updateMax(player, gameNumber) {
     let value = player.seconds(gameNumber);
@@ -220,8 +240,9 @@ function updateMax(player, gameNumber) {
 /**
  * UI
  * 
- * @param {number} gameNumber 
- * @returns 
+ * Takes the values in the min and max attributes of the range corresponding to the given game number and calculates the average of the two.
+ * @param {number} gameNumber
+ * @returns {number} The average of the min and max attributes of the range corresponding to the given game number.
  */
 function getRangeMiddle(gameNumber) {
     let min = Number($(`#range${gameNumber}`).attr('min'));
@@ -232,8 +253,10 @@ function getRangeMiddle(gameNumber) {
 /**
  * UI
  * 
- * @param {Player} player 
- * @param {number} gameNumber 
+ * Adds an option tag to the corresponding datalist of the given game number for the corresponding guess the given {@link Player} gave.
+ * This is used to give a marker to the game's range.
+ * @param {Player} player
+ * @param {number} gameNumber
  */
 function addMarker(player, gameNumber) {
     let value = player.seconds(gameNumber);
@@ -243,7 +266,7 @@ function addMarker(player, gameNumber) {
 /**
  * Creation
  * 
- * Creates range inputs with labels to the document for all games in {@link upcomingGames}.
+ * Creates range inputs with labels for all games in {@link upcomingGames}.
  */
 function createRanges() {
     let chosenSize;
@@ -302,7 +325,7 @@ function createGameHeaders() {
 /**
  * Creation
  * 
- * Creates a new row for the given {@link Player} with their data also including their guess for all games in {@link upcomingGames}.
+ * Creates a new row for the given {@link Player} with their data including their guess for all games in {@link upcomingGames}.
  * @param {Player} player
  */
 function createPlayerRow(player) {
@@ -330,7 +353,8 @@ function createPlayerRow(player) {
 /**
  * UI
  * 
- * @param {number} gameNumber 
+ * Updates every {@link Player}'s score for the given game number based on the value of the game's range and their guess.
+ * @param {number} gameNumber
  */
 function updateScores(gameNumber) {
     let value = $(`#range${gameNumber}`).val();
@@ -345,6 +369,7 @@ function updateScores(gameNumber) {
 /**
  * UI
  * 
+ * Updates every {@link Player}'s total score based on their current score and their scores for all upcoming games.
  */
 function updateTotals() {
     $('.player-row').each(function (e) {
@@ -360,7 +385,10 @@ function updateTotals() {
 /**
  * UI
  * 
- * @param {string} cellClass 
+ * Takes the data-seconds attribute in the td tag with the given class in each row and sorts the table in ascending order based on it.
+ * 
+ * Taken from https://www.w3schools.com/howto/howto_js_sort_table.asp
+ * @param {string} cellClass The class of the td tag which should have its data-seconds attribute be used for sorting. 'cell-total' is used in case nothing is given.
  */
 function sortTable(cellClass = 'cell-total') {
     let switching = true;
@@ -386,12 +414,19 @@ function sortTable(cellClass = 'cell-total') {
     }
 };
 
+/**
+ * Stores duplicate ranks from {@link updateRanks} for styling in {@link checkDuplicateRanks}.
+ * @type {Set.<number>}
+ */
 let duplicateRanks = new Set();
 
 /**
  * UI
  * 
- * @param {string} checkClass 
+ * Iterates through all rows in the table and sequentially adds their rank number.
+ * If the data-seconds attribute of the cell with the given class holds the same value as the previous row, the same rank number is applied.
+ * Also clears the current contents of {@link duplicateRanks} and adds all duplicate ranks to it.
+ * @param {string} checkClass The class of the td tag which should have its data-seconds attribute be used for duplicate score checking. 'cell-total' is used in case nothing is given.
  */
 function updateRanks(checkClass = 'cell-total') {
     duplicateRanks.clear();
@@ -420,7 +455,7 @@ function updateRanks(checkClass = 'cell-total') {
 /**
  * UI
  * 
- * @returns 
+ * Adds the 'duplicate-rank' class to all rows that have a rank that is stored in {@link duplicateRanks}.
  */
 function checkDuplicateRanks() {
     $('#playerTableBody tr.player-row').removeClass('duplicate-rank');
@@ -484,7 +519,7 @@ $(document).ready(function () {
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
         for (const player of players) {
             if (player.entryNumber === entryNumber) {
-                for (let gameNumber of upcomingGames) {
+                for (const gameNumber of upcomingGames) {
                     $(`#range${gameNumber}`)
                         .val(player.seconds(gameNumber))
                         .trigger('input');
