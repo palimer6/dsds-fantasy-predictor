@@ -1,4 +1,72 @@
 /**
+ * Map that assigns game titles to gameNumbers.
+ */
+const games = {
+    309: "My Baby Girl",
+    310: "Toon-Doku",
+    311: "Crash: Mind Over Mutant",
+    312: "DK: Jungle Climber",
+    313: "Lux-Pain",
+    314: "Bleach: The Blade of Fate",
+    315: "Princess Debut",
+    316: "Poptropica Adventures",
+    317: "Silly Bandz",
+    318: "Warioware D.I.Y.",
+    319: "Touch The Dead",
+    320: "Diamond Trust of London",
+    321: "Final Fantasy Crystal Chronicles: Echoes of Time",
+    322: "Jackass: The Game",
+    323: "Dreamworks Madagascar: Escape 2 Africa",
+    324: "Spider-Man 2",
+    325: "Spyro: Shadow Legacy",
+    326: "Super Collapse 3",
+    327: "Nostalgia",
+    328: "Dragon Ball Z: Attack of the Saiyans",
+    329: "Exit DS"
+};
+
+/**
+ * Map that assigns the time strings of the actual times that were taken to beat a game to gameNumbers.
+ */
+const actualTimes = {
+    309: "1:01:58",
+    310: "1:36:42",
+    311: "5:42:15",
+    312: "7:16:31",
+    313: "29:04:11",
+    314: "1:37:00",
+    315: "4:42:13",
+    316: "2:18:48",
+    317: "1:11:07",
+    318: "5:02:16",
+    319: "2:12:25",
+    320: "0:25:53",
+    321: "12:27:56",
+    322: "4:31:04",
+    323: "2:22:44",
+    324: "4:10:38",
+    326: "7:41:09",
+    327: "26:27:49",
+    328: "27:15:54"
+};
+
+/**
+ * The highest allowed number of rows of ranges.
+ */
+const MAX_RANGE_ROWS = 5;
+
+/**
+ * All possible number of ranges allowed in one row. These should not be changed as they correspond to bootstrap grid sizes.
+ */
+const rowSizes = [1, 2, 3, 4, 6, 12];
+
+/**
+ * Array of gameNumbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
+ */
+const upcomingGames = getUpcomingGames();
+
+
+/**
  * Util
  * 
  * Converts a string of the format h:mm:ss into seconds.
@@ -23,6 +91,32 @@ function secondsToTime(seconds) {
     let min = "" + (Math.floor(seconds / 60)) % 60;
     let hour = Math.floor(seconds / 3600);
     return hour + ":" + (min.length < 2 ? "0" + min : min) + ":" + (sec.length < 2 ? "0" + sec : sec);
+};
+
+/**
+ * Util
+ * 
+ * 
+ * @param {number} gameNumber 
+ * @returns 
+ */
+function hasBeenPlayed(gameNumber) {
+    return gameNumber in actualTimes;
+};
+
+/**
+ * Util
+ * 
+ * @returns 
+ */
+function getUpcomingGames() {
+    let upcomingGamesList = [];
+    for (let gameNumber in games) {
+        if (!(hasBeenPlayed(gameNumber))) {
+            upcomingGamesList.push(gameNumber);
+        }
+    }
+    return upcomingGamesList;
 };
 
 /**
@@ -86,99 +180,6 @@ function addMarker(player, gameNumber) {
     let value = player.seconds(gameNumber);
     $(`#list${gameNumber}`).append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
 };
-
-/**
- * Map that assigns game titles to gameNumbers.
- */
-const games = {
-    309: "My Baby Girl",
-    310: "Toon-Doku",
-    311: "Crash: Mind Over Mutant",
-    312: "DK: Jungle Climber",
-    313: "Lux-Pain",
-    314: "Bleach: The Blade of Fate",
-    315: "Princess Debut",
-    316: "Poptropica Adventures",
-    317: "Silly Bandz",
-    318: "Warioware D.I.Y.",
-    319: "Touch The Dead",
-    320: "Diamond Trust of London",
-    321: "Final Fantasy Crystal Chronicles: Echoes of Time",
-    322: "Jackass: The Game",
-    323: "Dreamworks Madagascar: Escape 2 Africa",
-    324: "Spider-Man 2",
-    325: "Spyro: Shadow Legacy",
-    326: "Super Collapse 3",
-    327: "Nostalgia",
-    328: "Dragon Ball Z: Attack of the Saiyans",
-    329: "Exit DS"
-};
-
-/**
- * Map that assigns the time strings of the actual times that were taken to beat a game to gameNumbers.
- */
-const actualTimes = {
-    309: "1:01:58",
-    310: "1:36:42",
-    311: "5:42:15",
-    312: "7:16:31",
-    313: "29:04:11",
-    314: "1:37:00",
-    315: "4:42:13",
-    316: "2:18:48",
-    317: "1:11:07",
-    318: "5:02:16",
-    319: "2:12:25",
-    320: "0:25:53",
-    321: "12:27:56",
-    322: "4:31:04",
-    323: "2:22:44",
-    324: "4:10:38",
-    326: "7:41:09",
-    327: "26:27:49",
-    328: "27:15:54"
-};
-
-/**
- * Array of gameNumbers that are in {@link games} but not in {@link actualTimes}, meaning they are yet to be finished.
- */
-const upcomingGames = getUpcomingGames();
-
-/**
- * Util
- * 
- * @param {number} gameNumber 
- * @returns 
- */
-function hasBeenPlayed(gameNumber) {
-    return gameNumber in actualTimes;
-};
-
-/**
- * Util
- * 
- * @returns 
- */
-function getUpcomingGames() {
-    let upcomingGamesList = [];
-    for (let gameNumber in games) {
-        if (!hasBeenPlayed(gameNumber)) {
-            upcomingGamesList.push(gameNumber);
-        }
-    }
-    return upcomingGamesList;
-};
-
-
-/**
- * The highest allowed number of rows of ranges.
- */
-const MAX_RANGE_ROWS = 5;
-
-/**
- * All possible number of ranges allowed in one row. These should not be changed as they correspond to bootstrap grid sizes.
- */
-const rowSizes = [1, 2, 3, 4, 6, 12];
 
 /**
  * Creation
