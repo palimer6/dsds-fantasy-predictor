@@ -213,7 +213,7 @@ function createRanges() {
     for (const gameNumber of UPCOMING_GAMES) {
         let rangeBlock = 
             `<div class="d-flex flex-column col-12 col-lg-${gridColSize}">
-                <p class="mb-1" id="time${gameNumber}">-</p>
+                <p class="mb-1">Time: <span id="time${gameNumber}">-</span></p>
                 <label for="range${gameNumber}" class="form-label flex-grow-1">#${gameNumber} - ${GAMES[gameNumber]}</label>
                 <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
                 <datalist id="list${gameNumber}"></datalist>
