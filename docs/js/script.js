@@ -329,14 +329,13 @@ function createPlayerRow(player) {
 /**
  * UI Creation
  * 
- * Takes the values in the min and max attributes of the range corresponding to the given game number and calculates the average of the two.
+ * Takes the values in the min and max attributes of the range corresponding to the given game number and sets its current value to their average.
  * @param {number} gameNumber
- * @returns {number} The average of the min and max attributes of the range corresponding to the given game number.
  */
-function getRangeMiddle(gameNumber) {
+function centerRange(gameNumber) {
     let min = Number($(`#range${gameNumber}`).attr('min'));
     let max = Number($(`#range${gameNumber}`).attr('max'));
-    return Math.round((min + max) / 2);
+    $(`#range${gameNumber}`).val(Math.round((min + max) / 2));
 };
 
 /**
@@ -486,7 +485,7 @@ $(document).ready(function () {
     //    $('#range328').val(80650).trigger('input');
     //    $('#range329').val(42755).trigger('input');
     for (const gameNumber of UPCOMING_GAMES) {
-        $(`#range${gameNumber}`).val(getRangeMiddle(gameNumber));
+        centerRange(gameNumber);
     }
     sortTable('cell-current');
     updateRanks('cell-current');
