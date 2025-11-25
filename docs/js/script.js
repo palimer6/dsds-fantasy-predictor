@@ -213,7 +213,7 @@ function createRanges() {
     for (const gameNumber of UPCOMING_GAMES) {
         let rangeBlock = 
             `<div class="d-flex flex-column col-12 col-lg-${gridColSize}">
-                <p class="mb-1">Time: <span id="time${gameNumber}">-</span></p>
+                <p class="mb-1">Time: <span id="time${gameNumber}">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</span></p>
                 <label for="range${gameNumber}" class="form-label flex-grow-1">#${gameNumber} - ${GAMES[gameNumber]}</label>
                 <input type="range" class="form-range time-range" id="range${gameNumber}" list="list${gameNumber}" data-game="${gameNumber}">
                 <datalist id="list${gameNumber}"></datalist>
@@ -290,14 +290,14 @@ function createPlayerRow(player) {
             <td class="cell-rank text-end"></td>
             <!--td class="cell-entry text-end">${player.entryNumber}</td-->
             <td class="cell-user-name">${player.userName}</td>
-            <td class="cell-total text-end">00:00:00</td>
+            <td class="cell-total text-end">&#x2012;&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>
             <td class="cell-to-next text-end"></td>
             <td class="cell-current text-end" data-seconds="${player.currentScore}">${secondsToTime(player.currentScore)}</td>`;
     let rowGames = '';
     for (const gameNumber of UPCOMING_GAMES) {
         rowGames = `${rowGames}
             <td class="cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
-            <td class="cell-game-${gameNumber} text-end">0:00:00</td>`;
+            <td class="cell-game-${gameNumber} text-end" data-seconds="0">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>`;
     }
     let rowEnd = '<td class="cell-set">' +
         '<button class="set-button btn btn-secondary btn-sm">Set</button>' +
@@ -472,25 +472,6 @@ $(document).ready(function () {
     checkDuplicateRanks();
 
     // UI Updates
-    /**
-     * Whether no input has been taken thus far.
-     * @type {boolean}
-     */
-    let firstInput = true;
-
-    /**
-     * Updates labels, scores, and totals for every game if {@link firstInput} is true.
-     */
-    $('.time-range').on('input', function () {
-        if (firstInput) {
-            firstInput = false;
-            for (let gameNumber of UPCOMING_GAMES) {
-                updateLabel(gameNumber);
-                updateScores(gameNumber);
-            }
-            updateTotals();
-        }
-    });
 
     /**
      * Updates labels and scores for the range's game and updates totals, sorting, ranks, and duplicate ranks for the whole table.
