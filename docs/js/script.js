@@ -197,73 +197,6 @@ players.push(new Player(27, "Asmodemus0", { 309: "1:45:23", 310: "1:23:45", 311:
 players.push(new Player(28, "kiYubEE", { 309: "2:15:36", 310: "0:52:48", 311: "4:21:09", 312: "4:44:44", 313: "19:06:09", 314: "1:37:10", 315: "1:10:37", 316: "0:57:34", 317: "1:47:22", 318: "3:33:33", 319: "2:39:57", 320: "7:53:09", 321: "8:00:08", 322: "2:55:43", 323: "3:07:07", 324: "1:39:04", 325: "4:44:44", 326: "3:33:33", 327: "27:27:27", 328: "25:12:25", 329: "26:52:21" }));
 
 /**
- * UI Update
- * 
- * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
- * @param {number} gameNumber the number to be appended to 'range' and 'time' to find the elements with the corresponding IDs
- */
-function updateLabel(gameNumber) {
-    let time = secondsToTime($(`#range${gameNumber}`).val());
-    $(`#time${gameNumber}`).html(time);
-};
-
-/**
- * UI Creation
- * 
- * Takes the guess the given {@link Player} gave for the given game number and expands the min attribute of the corresponding range if it is lower than the current value.
- * @param {Player} player
- * @param {number} gameNumber
- */
-function updateMin(player, gameNumber) {
-    let value = player.seconds(gameNumber);
-    let targetRange = $(`#range${gameNumber}`);
-    if (targetRange.attr('min') === undefined || value < targetRange.attr('min')) {
-        targetRange.attr('min', value);
-    }
-};
-
-/**
- * UI Creation
- * 
- * Takes the guess the given {@link Player} gave for the given game number and expands the max attribute of the corresponding range if it is greater than the current value.
- * @param {Player} player
- * @param {number} gameNumber
- */
-function updateMax(player, gameNumber) {
-    let value = player.seconds(gameNumber);
-    let targetRange = $(`#range${gameNumber}`);
-    if (targetRange.attr('max') === undefined || value > targetRange.attr('max')) {
-        targetRange.attr('max', value);
-    }
-};
-
-/**
- * UI Creation
- * 
- * Takes the values in the min and max attributes of the range corresponding to the given game number and calculates the average of the two.
- * @param {number} gameNumber
- * @returns {number} The average of the min and max attributes of the range corresponding to the given game number.
- */
-function getRangeMiddle(gameNumber) {
-    let min = Number($(`#range${gameNumber}`).attr('min'));
-    let max = Number($(`#range${gameNumber}`).attr('max'));
-    return Math.round((min + max) / 2);
-}
-
-/**
- * UI Creation
- * 
- * Adds an option tag to the corresponding datalist of the given game number for the corresponding guess the given {@link Player} gave.
- * This is used to give a marker to the game's range.
- * @param {Player} player
- * @param {number} gameNumber
- */
-function addMarker(player, gameNumber) {
-    let value = player.seconds(gameNumber);
-    $(`#list${gameNumber}`).append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
-};
-
-/**
  * UI Creation
  * 
  * Creates range inputs with labels for all games in {@link UPCOMING_GAMES}.
@@ -307,7 +240,7 @@ function createRanges() {
         rangeRow = `${rangeRow}</div>`;
         $('#gameRanges').append(timeRow + titleRow + rangeRow);
     }
-}
+};
 
 /**
  * UI Creation
@@ -320,7 +253,50 @@ function createGameHeaders() {
         gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${GAMES[gameNumber]}</th>`;
     }
     $('.header-current').after(gameHeaders);
-}
+};
+
+/**
+ * UI Creation
+ * 
+ * Takes the guess the given {@link Player} gave for the given game number and expands the min attribute of the corresponding range if it is lower than the current value.
+ * @param {Player} player
+ * @param {number} gameNumber
+ */
+function updateMin(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    let targetRange = $(`#range${gameNumber}`);
+    if (targetRange.attr('min') === undefined || value < targetRange.attr('min')) {
+        targetRange.attr('min', value);
+    }
+};
+
+/**
+ * UI Creation
+ * 
+ * Takes the guess the given {@link Player} gave for the given game number and expands the max attribute of the corresponding range if it is greater than the current value.
+ * @param {Player} player
+ * @param {number} gameNumber
+ */
+function updateMax(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    let targetRange = $(`#range${gameNumber}`);
+    if (targetRange.attr('max') === undefined || value > targetRange.attr('max')) {
+        targetRange.attr('max', value);
+    }
+};
+
+/**
+ * UI Creation
+ * 
+ * Adds an option tag to the corresponding datalist of the given game number for the corresponding guess the given {@link Player} gave.
+ * This is used to give a marker to the game's range.
+ * @param {Player} player
+ * @param {number} gameNumber
+ */
+function addMarker(player, gameNumber) {
+    let value = player.seconds(gameNumber);
+    $(`#list${gameNumber}`).append(`<option value="${value}" label="${secondsToTime(value)}"></option>`);
+};
 
 /**
  * UI Creation
@@ -351,35 +327,16 @@ function createPlayerRow(player) {
 };
 
 /**
- * UI Update
+ * UI Creation
  * 
- * Updates every {@link Player}'s score for the given game number based on the value of the game's range and their guess.
+ * Takes the values in the min and max attributes of the range corresponding to the given game number and calculates the average of the two.
  * @param {number} gameNumber
+ * @returns {number} The average of the min and max attributes of the range corresponding to the given game number.
  */
-function updateScores(gameNumber) {
-    let value = $(`#range${gameNumber}`).val();
-    for (const player of players) {
-        let score = Math.abs(value - player.seconds(gameNumber));
-        let target = $(`tr[data-player="${player.entryNumber}"] td.cell-game-${gameNumber}`);
-        target.attr('data-seconds', score);
-        target.html(secondsToTime(score));
-    }
-};
-
-/**
- * UI Update
- * 
- * Updates every {@link Player}'s total score based on their current score and their scores for all upcoming games.
- */
-function updateTotals() {
-    $('.player-row').each(function (e) {
-        let total = Number($(this).find('td.cell-current').attr('data-seconds'));
-        for (const upcomingGame of UPCOMING_GAMES) {
-            let score = Number($(this).find(`td.cell-game-${upcomingGame}`).attr('data-seconds'));
-            total += score;
-        }
-        $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
-    });
+function getRangeMiddle(gameNumber) {
+    let min = Number($(`#range${gameNumber}`).attr('min'));
+    let max = Number($(`#range${gameNumber}`).attr('max'));
+    return Math.round((min + max) / 2);
 };
 
 /**
@@ -467,6 +424,49 @@ function checkDuplicateRanks() {
         if (duplicateRanks.has(rank)) {
             $(this).addClass('duplicate-rank');
         }
+    });
+};
+
+/**
+ * UI Update
+ * 
+ * Takes the current value of the range for the given game number and writes its time string to the corresponding span.
+ * @param {number} gameNumber the number to be appended to 'range' and 'time' to find the elements with the corresponding IDs
+ */
+function updateLabel(gameNumber) {
+    let time = secondsToTime($(`#range${gameNumber}`).val());
+    $(`#time${gameNumber}`).html(time);
+};
+
+/**
+ * UI Update
+ * 
+ * Updates every {@link Player}'s score for the given game number based on the value of the game's range and their guess.
+ * @param {number} gameNumber
+ */
+function updateScores(gameNumber) {
+    let value = $(`#range${gameNumber}`).val();
+    for (const player of players) {
+        let score = Math.abs(value - player.seconds(gameNumber));
+        let target = $(`tr[data-player="${player.entryNumber}"] td.cell-game-${gameNumber}`);
+        target.attr('data-seconds', score);
+        target.html(secondsToTime(score));
+    }
+};
+
+/**
+ * UI Update
+ * 
+ * Updates every {@link Player}'s total score based on their current score and their scores for all upcoming games.
+ */
+function updateTotals() {
+    $('.player-row').each(function (e) {
+        let total = Number($(this).find('td.cell-current').attr('data-seconds'));
+        for (const upcomingGame of UPCOMING_GAMES) {
+            let score = Number($(this).find(`td.cell-game-${upcomingGame}`).attr('data-seconds'));
+            total += score;
+        }
+        $(this).find('td.cell-total').attr('data-seconds', total).html(secondsToTime(total));
     });
 };
 
