@@ -120,8 +120,6 @@ function calculateScore(guesses) {
     return score;
 }
 
-
-
 /**
  * UI Creation
  * 
@@ -290,6 +288,7 @@ let duplicateRanks = new Set();
  * 
  * Iterates through all rows in the table and sequentially adds their rank number.
  * If the data-seconds attribute of the cell with the given class holds the same value as the previous row, the same rank number is applied.
+ * If all values are the same, all ranks are set to 0 using {@link unsetRanks}.
  * Also clears the current contents of {@link duplicateRanks} and adds all duplicate ranks to it.
  * Also fills the to-next column with the difference to the row above.
  * @param {string} checkClass The class of the td tag which should have its data-seconds attribute be used for duplicate score checking. 'cell-total' is used in case nothing is given.
@@ -298,7 +297,7 @@ function updateRanks(checkClass = 'cell-total') {
     duplicateRanks.clear();
     let i = 1;
     let sameCount = 0;
-    let lastTotal = 0;
+    let lastTotal = -1;
     $('#playerTableBody tr.player-row').each(function () {
         let total = Number($(this).find(`td.${checkClass}`).attr('data-seconds'));
         if (total === lastTotal) {
@@ -315,6 +314,18 @@ function updateRanks(checkClass = 'cell-total') {
         lastTotal = total;
         $(this).find('td.cell-rank').attr('data-rank', i - sameCount).html(i - sameCount);
         i++;
+    });
+    if (sameCount === PLAYERS.length - 1) {
+        unsetRanks();
+    }
+};
+
+/**
+ * Sets all ranks to 0.
+ */
+function unsetRanks() {
+    $('#playerTableBody tr.player-row').each(function () {
+        $(this).find('td.cell-rank').attr('data-rank', 0).html(0);
     });
 };
 
