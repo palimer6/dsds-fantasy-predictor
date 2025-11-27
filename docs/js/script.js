@@ -236,6 +236,19 @@ function createPlayerRow(player) {
 /**
  * UI Creation
  * 
+ * Sets the minimum value of the range corresponding to the given game number to the seconds representation of the given time string.
+ * 
+ * This is used if a game is currently ongoing.
+ * @param {number} gameNumber 
+ * @param {string} time 
+ */
+function overwriteMin(gameNumber, time) {
+    $(`#range${gameNumber}`).attr('min', timeToSeconds(time));
+};
+
+/**
+ * UI Creation
+ * 
  * Takes the values in the min and max attributes of the range corresponding to the given game number and sets its current value to their average.
  * @param {number} gameNumber
  */
@@ -402,9 +415,9 @@ $(document).ready(function () {
         }
         createPlayerRow(player);
     }
-    //    $('#range325').val(13950).trigger('input');
-    //    $('#range328').val(80650).trigger('input');
-    //    $('#range329').val(42755).trigger('input');
+
+    // overwriteMin({gameNumber},{time});
+
     for (const gameNumber of UPCOMING_GAMES) {
         centerRange(gameNumber);
     }
