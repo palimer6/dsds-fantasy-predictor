@@ -152,12 +152,28 @@ function createRanges() {
 /**
  * UI Creation
  * 
+ * Creates a list of checkboxes for all games in {@link UPCOMING_GAMES} to toggle wether they are displayed or not.
+ */
+function createDisplayChecks() {
+    for (const gameNumber of UPCOMING_GAMES) {
+        let displayCheck =
+            `<div class="form-check">
+                <input id="display${gameNumber}" class="form-check-input display-check" type="checkbox" data-game="${gameNumber}" checked>
+                <label for="display${gameNumber}" class="form-check-label">Show #${gameNumber} - ${GAMES[gameNumber]}</label>
+            </div>`;
+        $('#colDisplayCard').append(displayCheck);
+    }
+};
+
+/**
+ * UI Creation
+ * 
  * Creates 2 colspan headers for all games in {@link UPCOMING_GAMES}.
  */
 function createGameHeaders() {
     let gameHeaders = '';
     for (const gameNumber of UPCOMING_GAMES) {
-        gameHeaders = `${gameHeaders}<th class="header-${gameNumber}" colspan="2">#${gameNumber} - ${GAMES[gameNumber]}</th>`;
+        gameHeaders = `${gameHeaders}<th class="header-${gameNumber} game-col game-col-${gameNumber}" colspan="2">#${gameNumber} - ${GAMES[gameNumber]}</th>`;
     }
     $('.header-current').after(gameHeaders);
 };
@@ -223,8 +239,8 @@ function createPlayerRow(player) {
     let rowGames = '';
     for (const gameNumber of UPCOMING_GAMES) {
         rowGames = `${rowGames}
-            <td class="cell-guess cell-guess-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
-            <td class="cell-game cell-game-${gameNumber} text-end" data-game="${gameNumber}" data-seconds="0">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>`;
+            <td class="cell-guess cell-guess-${gameNumber} game-col game-col-${gameNumber} text-end">${player.guesses[gameNumber]}</td>
+            <td class="cell-game cell-game-${gameNumber} game-col game-col-${gameNumber} text-end" data-game="${gameNumber}" data-seconds="0">&#x2012;:&#x2012;&#x2012;:&#x2012;&#x2012;</td>`;
     }
     let rowEnd = '<td class="cell-set">' +
         '<button class="set-button btn btn-secondary btn-sm">Set</button>' +
@@ -406,6 +422,7 @@ function updateTotals() {
 $(document).ready(function () {
     // UI Creation
     createRanges();
+    createDisplayChecks();
     createGameHeaders();
     for (const player of PLAYERS) {
         for (const gameNumber of UPCOMING_GAMES) {
@@ -424,6 +441,11 @@ $(document).ready(function () {
     sortTable('cell-current');
     updateRanks('cell-current');
     checkDuplicateRanks();
+
+    if ($('#playerTable').width() > $('body').width()) {
+        $('.game-col').hide();
+        $('.display-check').prop('checked', false);
+    }
 
     // UI Updates
 
@@ -505,6 +527,12 @@ $(document).ready(function () {
      * @type {boolean}
      */
     let infoShown = false;
+    
+    /**
+     * Whether the column display settings are currently shown.
+     * @type {boolean}
+     */
+    let colDisplayShown = false;
 
     /**
      * Toggle the info box when the info button is clicked.
@@ -519,14 +547,29 @@ $(document).ready(function () {
     });
 
     /**
+     * Toggle the column display settings when the col display is clicked.
+     */
+    $('#colDisplayButton').on('click', function (e) {
+        e.stopPropagation();
+        if (colDisplayShown) {
+            hideColDisplay();
+        } else {
+            showColDisplay();
+        }
+    });
+
+    /**
      * Hide the info box if anywhere but the info box is clicked.
      */
     $('body').on('click', function (e) {
-        if (!infoShown) {
+        if (!infoShown && !colDisplayShown) {
             return;
         }
         if (!$("#infoCard").is(e.target) && $("#infoCard").has(e.target).length === 0) {
             hideInfo();
+        }
+        if (!$("#colDisplayCard").is(e.target) && $("#colDisplayCard").has(e.target).length === 0) {
+            hideColDisplay();
         }
     });
 
@@ -551,4 +594,38 @@ $(document).ready(function () {
         infoShown = false;
         $(document).unbind('keydown.escape_info');
     };
+
+    /**
+     * Show the column display settings and bind hiding them to the escape key.
+     */
+    function showColDisplay() {
+        $('#colDisplayCard').show(200);
+        colDisplayShown = true;
+        $(document).on('keydown.escape_col_display', function (e) {
+            if (e.key === 'Escape') {
+                hideColDisplay();
+            }
+        });
+    };
+
+    /**
+     * Hide the column display settings and unbind hiding them from the escape key.
+     */
+    function hideColDisplay() {
+        $('#colDisplayCard').hide(200);
+        colDisplayShown = false;
+        $(document).unbind('keydown.escape_col_display');
+    };
+
+    /**
+     * Show or hide a game column based on the display checkbox clicked.
+     */
+    $('.display-check').on('change', function () {
+        let gameNumber = Number($(this).attr('data-game'));
+        if ($(this).prop('checked')) {
+            $(`.game-col-${gameNumber}`).show();
+        } else {
+            $(`.game-col-${gameNumber}`).hide();
+        }
+    });
 });

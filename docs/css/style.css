@@ -66,3 +66,12 @@ tr.player-row.highlighted {
 .transparent:hover {
     opacity: 100%;
 }
+
+#colDisplayCard {
+    top: 55px;
+}
+
+.icon-button {
+    min-width: 2.125rem;
+    min-height: 2.125rem;
+}
