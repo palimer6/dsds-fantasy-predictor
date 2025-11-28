@@ -1,0 +1,25 @@
+name: Update Commit Hash
+
+on:
+  push:
+    branches:
+      - season-2
+
+jobs:
+  update-commit-hash:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get commit hash and update file
+        run: |
+          echo "let commitHash = '$(git rev-parse HEAD)';" > docs/js/data/hash.js
+        
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: 'github-actions[bot]'
+          author_email: 'github-actions[bot]@users.noreply.github.com'
+          message: 'Update commit hash in hash.js'
