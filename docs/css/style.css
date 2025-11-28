@@ -75,3 +75,7 @@ tr.player-row.highlighted {
     min-width: 2.125rem;
     min-height: 2.125rem;
 }
+
+.fake-icon-button {
+    display: inline-block;
+}
