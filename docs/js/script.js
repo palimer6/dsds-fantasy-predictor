@@ -433,6 +433,9 @@ function isTarget(event, element) {
 
 $(document).ready(function () {
     // UI Creation
+    $('#commitHash').html(commitHash.substring(0, 8));
+    $('#commitBranch').html(commitBranch);
+    $('#commitTime').html(commitTime);
     createRanges();
     createDisplayChecks();
     createGameHeaders();

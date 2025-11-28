@@ -79,3 +79,8 @@ tr.player-row.highlighted {
 .fake-icon-button {
     display: inline-block;
 }
+
+.text-tiny {
+    font-size: 0.75em;
+    opacity: 50%;
+}
