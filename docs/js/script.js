@@ -442,9 +442,11 @@ $(document).ready(function () {
     updateRanks('cell-current');
     checkDuplicateRanks();
 
+    // If the table with all games is wider than the device, all games are automatically hidden.
     if ($('#playerTable').width() > $('body').width()) {
         $('.game-col').hide();
         $('.display-check').prop('checked', false);
+        $('#displayAll').prop('checked', false);
     }
 
     // UI Updates
@@ -619,6 +621,7 @@ $(document).ready(function () {
 
     /**
      * Show or hide a game column based on the display checkbox clicked.
+     * Also change state of displayAll.
      */
     $('.display-check').on('change', function () {
         let gameNumber = Number($(this).attr('data-game'));
@@ -626,6 +629,31 @@ $(document).ready(function () {
             $(`.game-col-${gameNumber}`).show();
         } else {
             $(`.game-col-${gameNumber}`).hide();
+        }
+        
+        let checkedChecksCount = $('.display-check:checked').length;
+        if (checkedChecksCount == 0) {
+            $('#displayAll').prop('checked', false).prop('indeterminate', false);
+        } else {
+            let checksCount = $('.display-check').length;
+            if (checkedChecksCount === checksCount) {
+                $('#displayAll').prop('checked', true).prop('indeterminate', false);
+            } else {
+                $('#displayAll').prop('checked', false).prop('indeterminate', true);
+            }
+        }
+    });
+
+    /**
+     * Checks and displays or unchecks and hides all game columns.
+     */
+    $('#displayAll').on('change', function () {
+        if ($(this).prop('checked')) {
+            $('.display-check').prop('checked', true);
+            $(`.game-col`).show();
+        } else {
+            $('.display-check').prop('checked', false);
+            $(`.game-col`).hide();
         }
     });
 });
