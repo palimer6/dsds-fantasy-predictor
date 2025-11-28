@@ -23,7 +23,7 @@ jobs:
           # Get the current commit hash, branch, and commit time
           COMMIT_HASH=$(git rev-parse HEAD)
           COMMIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)  # Get current branch name
-          COMMIT_TIME=$(date --date="$(git log -1 --format=%ad)" +"%Y-%m-%d %H:%M:%S")  # Commit time in format YYYY-MM-DD HH:MM:SS
+          COMMIT_TIME=$(git show --no-patch --format=%cd HEAD)  # Commit time
 
           # Write the values to the file docs/js/data/commit.js
           echo "let commitHash = '${COMMIT_HASH}';" > docs/js/data/commit.js
