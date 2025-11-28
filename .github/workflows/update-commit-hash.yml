@@ -3,12 +3,12 @@ name: Update Commit Hash
 on:
   push:
     branches:
-      - '*'  # This will trigger the action on any branch
+      - season-2
     paths-ignore:
-      - docs/js/data/hash.js  # This ensures the action doesn't trigger on updates to the hash file itself
+      - docs/js/data/hash.js
 
 permissions:
-  contents: write  # Grant write access to repository contents
+  contents: write  # This grants write access to repository contents
 
 jobs:
   update-commit-hash:
