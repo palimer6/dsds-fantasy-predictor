@@ -419,6 +419,18 @@ function updateTotals() {
     });
 };
 
+/**
+ * UI Update
+ * 
+ * Checks if the given jQuery element is or contains the target of the given {@link Event}.
+ * @param {Event} event
+ * @param {jQuery} element
+ * @returns {boolean} whether the event's target is or is contained by the element.
+ */
+function isTarget(event, element) {
+    return element.is(event.target) || element.has(event.target).length !== 0;
+};
+
 $(document).ready(function () {
     // UI Creation
     createRanges();
@@ -486,7 +498,6 @@ $(document).ready(function () {
      * Sets the range values of all games to the guesses of this row's player.
      */
     $('tr.player-row td.cell-set .set-button').on('click', function (e) {
-        e.stopPropagation();
         let partialMode = e.shiftKey;
         let entryNumber = Number($(this).parent().parent().attr('data-player'));
         let skipGames = [];
@@ -515,7 +526,10 @@ $(document).ready(function () {
     /**
      * Adds the 'highlighted' class to this row.
      */
-    $('tr.player-row td').on('click', function () {
+    $('tr.player-row td').on('click', function (e) {
+        if (isTarget(e, $('tr.player-row td.cell-set .set-button'))) {
+            return;
+        }
         let isHighlighted = $(this).parent().hasClass('highlighted');
         if (isHighlighted) {
             $(this).parent().removeClass('highlighted');
@@ -540,7 +554,6 @@ $(document).ready(function () {
      * Toggle the info box when the info button is clicked.
      */
     $('#infoButton').on('click', function (e) {
-        e.stopPropagation();
         if (infoShown) {
             hideInfo();
         } else {
@@ -552,7 +565,6 @@ $(document).ready(function () {
      * Toggle the column display settings when the col display is clicked.
      */
     $('#colDisplayButton').on('click', function (e) {
-        e.stopPropagation();
         if (colDisplayShown) {
             hideColDisplay();
         } else {
@@ -563,14 +575,14 @@ $(document).ready(function () {
     /**
      * Hide the info box if anywhere but the info box is clicked.
      */
-    $('body').on('click', function (e) {
+    $(document).on('click', function (e) {
         if (!infoShown && !colDisplayShown) {
             return;
         }
-        if (!$("#infoCard").is(e.target) && $("#infoCard").has(e.target).length === 0) {
+        if (!isTarget(e, $('#infoButton')) && !isTarget(e, $('#infoCard'))) {
             hideInfo();
         }
-        if (!$("#colDisplayCard").is(e.target) && $("#colDisplayCard").has(e.target).length === 0) {
+        if (!isTarget(e, $('#colDisplayButton')) && !isTarget(e, $('#colDisplayCard'))) {
             hideColDisplay();
         }
     });
