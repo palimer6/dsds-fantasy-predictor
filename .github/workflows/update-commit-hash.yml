@@ -3,7 +3,7 @@ name: Update Commit Hash
 on:
   push:
     branches:
-      - main
+      - season-2
     # Ignore changes to the hash.js file itself
     paths-ignore:
       - docs/js/data/hash.js
