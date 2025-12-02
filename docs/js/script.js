@@ -469,7 +469,7 @@ $(document).ready(function () {
     //    $('#range325').val(13950).trigger('input');
     //    $('#range328').val(80650).trigger('input');
     //    $('#range329').val(42755).trigger('input');
-    $(`#range329`).attr('min', timeToSeconds("6:03:12"));
+    $(`#range329`).attr('min', timeToSeconds("17:28:51"));
     for (const gameNumber of UPCOMING_GAMES) {
         centerRange(gameNumber);
     }
