@@ -1,0 +1,39 @@
+name: Update Commit Hash
+
+on:
+  push:
+    branches:
+      - '*'  # Trigger on any branch
+    paths-ignore:
+      - docs/js/data/commit.js  # Prevent action from triggering on updates to commit.js itself
+
+permissions:
+  contents: write  # Grant write access to repository contents
+
+jobs:
+  update-commit-hash:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get commit hash, branch, and commit time, and update file
+        run: |
+          # Get the current commit hash, branch, and commit time
+          COMMIT_HASH=$(git rev-parse HEAD)
+          COMMIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)  # Get current branch name
+          COMMIT_TIME=$(git show --no-patch --format=%cd HEAD)  # Commit time
+
+          # Write the values to the file docs/js/data/commit.js
+          echo "let commitHash = '${COMMIT_HASH}';" > docs/js/data/commit.js
+          echo "let commitBranch = '${COMMIT_BRANCH}';" >> docs/js/data/commit.js
+          echo "let commitTime = '${COMMIT_TIME}';" >> docs/js/data/commit.js
+
+      - name: Commit and push changes to the current branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/js/data/commit.js
+          git commit --author="palimer6<dennisrudolph512@gmail.com>" -m "Update commit hash, branch, and time in commit.js"
+          git push origin HEAD:${{ github.ref_name }}  # Push changes to the current branch

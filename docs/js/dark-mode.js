@@ -1,13 +1,14 @@
 // This script is designed for Bootstrap 5.3 +
-window.addEventListener('DOMContentLoaded', (event) => {
+let darkMode = false;
+$(document).ready(function () {
 	const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 	if (prefersDark) {
     	document.documentElement.setAttribute("data-bs-theme", "dark");
-    	document.getElementById('darkModeSwitch').checked = true;
+		darkMode = true;
 	}
-	document.getElementById('darkModeSwitch').addEventListener('change', function() {
-        let temp = document.getElementById('darkModeSwitch').checked;
-        document.documentElement.setAttribute("data-bs-theme", temp ? "dark" : "light");
-    });
+	$('#darkModeButton').on('click', function () {
+		darkMode = !darkMode;
+		document.documentElement.setAttribute("data-bs-theme", darkMode ? "dark" : "light");
+	});
 });
 
