@@ -12,7 +12,7 @@ class Player {
          * @member {number} entryNumber
          */
         this.entryNumber = entryNumber;
-        /**  
+        /**
          * @member {string} userName
         */
         this.userName = userName;
@@ -151,7 +151,7 @@ function createRanges() {
 
 /**
  * UI Creation
- * 
+ *
  * Creates a list of checkboxes for all games in {@link UPCOMING_GAMES} to toggle wether they are displayed or not.
  */
 function createDisplayChecks() {
@@ -251,12 +251,12 @@ function createPlayerRow(player) {
 
 /**
  * UI Creation
- * 
+ *
  * Sets the minimum value of the range corresponding to the given game number to the seconds representation of the given time string.
- * 
+ *
  * This is used if a game is currently ongoing.
- * @param {number} gameNumber 
- * @param {string} time 
+ * @param {number} gameNumber
+ * @param {string} time
  */
 function overwriteMin(gameNumber, time) {
     $(`#range${gameNumber}`).attr('min', timeToSeconds(time));
@@ -421,7 +421,7 @@ function updateTotals() {
 
 /**
  * UI Update
- * 
+ *
  * Checks if the given jQuery element is or contains the target of the given {@link Event}.
  * @param {Event} event
  * @param {jQuery} element
@@ -546,7 +546,7 @@ $(document).ready(function () {
      * @type {boolean}
      */
     let infoShown = false;
-    
+
     /**
      * Whether the column display settings are currently shown.
      * @type {boolean}
@@ -645,7 +645,7 @@ $(document).ready(function () {
         } else {
             $(`.game-col-${gameNumber}`).hide();
         }
-        
+
         let checkedChecksCount = $('.display-check:checked').length;
         if (checkedChecksCount == 0) {
             $('#displayAll').prop('checked', false).prop('indeterminate', false);
