@@ -3,10 +3,6 @@
 <script src="js/jquery-3.7.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css" integrity="sha512-v8QQ0YQ3H4K6Ic3PJkym91KoeNT5S3PnDKvqnwqFD1oiqIl653crGZplPdU5KKtHjO0QKcQ2aUlQZYjHczkmGw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/solid.min.css" integrity="sha512-DzC7h7+bDlpXPDQsX/0fShhf1dLxXlHuhPBkBo/5wJWRoTU6YL7moeiNoej6q3wh5ti78C57Tu1JwTNlcgHSjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/fontawesome.min.js" integrity="sha512-j12pXc2gXZL/JZw5Mhi6LC7lkiXL0e2h+9ZWpqhniz0DkDrO01VNlBrG3LkPBn6DgG2b8CDjzJT+lxfocsS1Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/solid.min.js" integrity="sha512-H/FYzgm63CLJLwSgCNv7zmAHWnbw7GwOrnCjE15CD969yHWj7fGDiHHLZuZJLO9ZGIkBR/JL91/p/ddbtUUgQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="js/data/games.js"></script>
 <script src="js/data/actual-times.js"></script>
@@ -24,13 +20,13 @@
 <div class="float-ne row">
     <div class="d-flex">
         <button id="infoButton" class="card transparent mx-1 justify-content-center icon-button">
-            <i class="fa-solid fa-circle-info"></i>
+            ℹ️
         </button>
         <button id="colDisplayButton" class="card transparent mx-1 justify-content-center icon-button">
-            <i class="fa-solid fa-plus"></i>
+            ➕
         </button>
         <button id="darkModeButton" class="card transparent mx-1 justify-content-center icon-button">
-            <i class="fa-solid fa-moon"></i>
+            🌙
         </button>
     </div>
 </div>
@@ -46,13 +42,13 @@
             <li>Click the <span class="btn btn-secondary btn-sm">Set</span> button while holding shift to only set games that have not been set otherwise. (A game that has not been set will have "&#x2012:&#x2012&#x2012:&#x2012&#x2012" listed as its time)</li>
         </ul>
         <li>Click any row to highlight it. That way you can more easily track it while it changes positions.</li>
-        <li>Click the <button class="card justify-content-center icon-button fake-icon-button"><i class="fa-solid fa-moon"></i></button> button in the top right to toggle between dark and light mode. When loading the page, your device's preference will automatically be applied.</li>
+        <li>Click the <button class="card justify-content-center icon-button fake-icon-button">🌙</button> button in the top right to toggle between dark and light mode. When loading the page, your device's preference will automatically be applied.</li>
         <li>If you find a combination of times that result in two or more people being tied, their rows will be highlighted together. Either in the placement colors if they are in the top 3, or in cyan.</li>
-        <li>Click the <button class="card justify-content-center icon-button fake-icon-button"><i class="fa-solid fa-plus"></i></button> button in the top right to select which games' columns you want to show in the table.</li>
+        <li>Click the <button class="card justify-content-center icon-button fake-icon-button">➕</button> button in the top right to select which games' columns you want to show in the table.</li>
         <ul>
             <li>When all games would make the table wider than your device, the game columns are hidden automatically.</li>
         </ul>
-        <li>Click the <button class="card justify-content-center icon-button fake-icon-button"><i class="fa-solid fa-circle-info"></i></button> button, the escape key, or anywhere outside the info box to close it.</li>
+        <li>Click the <button class="card justify-content-center icon-button fake-icon-button">ℹ️</button> button, the escape key, or anywhere outside the info box to close it.</li>
     </ul>
 </div>
 <div id="colDisplayCard" class="card float-ne p-2" style="display: none;">
@@ -88,6 +84,7 @@
         <div>Committed on <span id="commitTime"></span></div>
     </div>
     <div class="small">If you have suggestions or want to report a bug, do so <a href="https://github.com/palimer6/dsds-fantasy-predictor/issues" target="_blank">here</a>.</div>
+    <a href="https://www.flaticon.com/free-icons/info" title="info icons">Info icons created by Freepik - Flaticon</a>
 </footer>
 </body>
 </html>
