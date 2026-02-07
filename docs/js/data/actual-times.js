@@ -5,6 +5,7 @@
 const ACTUAL_TIMES = {
     330: "12:03:03", // Tamagotchi
     331: "10:50:06", // Conquest
+    332: "9:54:42", // BoPoP
     333: "4:10:32", // CoD
     336: "2:24:43", // New Zealand
     337: "3:24:33", // Tornado
