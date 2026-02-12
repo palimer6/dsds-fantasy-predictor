@@ -7,6 +7,7 @@ const ACTUAL_TIMES = {
     331: "10:50:06", // Conquest
     332: "9:54:42", // BoPoP
     333: "4:10:32", // CoD
+    334: "48:54:50", // DQ IX
     336: "2:24:43", // New Zealand
     337: "3:24:33", // Tornado
     339: "1:28:19", // Space Camp
