@@ -8,6 +8,7 @@ const ACTUAL_TIMES = {
     332: "9:54:42", // BoPoP
     333: "4:10:32", // CoD
     334: "48:54:50", // DQ IX
+    335: "3:34:44", // Brain Age
     336: "2:24:43", // New Zealand
     337: "3:24:33", // Tornado
     339: "1:28:19", // Space Camp
