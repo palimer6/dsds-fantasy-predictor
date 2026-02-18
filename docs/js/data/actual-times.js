@@ -12,6 +12,7 @@ const ACTUAL_TIMES = {
     336: "2:24:43", // New Zealand
     337: "3:24:33", // Tornado
     339: "1:28:19", // Space Camp
+    342: "2:38:25", // Family Feud
     346: "3:33:01", // River City
     347: "0:52:14", // Driver's Ed
     349: "4:42:24" // Spelling
