@@ -11,9 +11,18 @@ const ACTUAL_TIMES = {
     335: "3:34:44", // Brain Age
     336: "2:24:43", // New Zealand
     337: "3:24:33", // Tornado
+    338: "7:54:30", // Power Rangers
     339: "1:28:19", // Space Camp
+    /*340: "", // Suikoden */
+    /*341: "", // Ant Nation */
     342: "2:38:25", // Family Feud
+    343: "3:43:25", // Imagine Salon Stylist
+    /*344: "", // Dark Souls */
+    /*345: "", // Heartgold */
     346: "3:33:01", // River City
     347: "0:52:14", // Driver's Ed
-    349: "4:42:24" // Spelling
+    348: "1:08:33", // Petz Bunnyz
+    349: "4:42:24", // Spelling
+    350: "1:22:43", // Sudoku
+    /*351: "" // Dokapon */
 };
