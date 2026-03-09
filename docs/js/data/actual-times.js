@@ -13,7 +13,7 @@ const ACTUAL_TIMES = {
     337: "3:24:33", // Tornado
     338: "7:54:30", // Power Rangers
     339: "1:28:19", // Space Camp
-    /*340: "", // Suikoden */
+    340: "39:59:32", // Suikoden
     /*341: "", // Ant Nation */
     342: "2:38:25", // Family Feud
     343: "3:43:25", // Imagine Salon Stylist
