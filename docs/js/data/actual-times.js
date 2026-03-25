@@ -18,7 +18,7 @@ const ACTUAL_TIMES = {
     342: "2:38:25", // Family Feud
     343: "3:43:25", // Imagine Salon Stylist
     344: "5:00:34", // Dark Souls
-    /*345: "", // Heartgold */
+    345: "31:34:42", // Heartgold
     346: "3:33:01", // River City
     347: "0:52:14", // Driver's Ed
     348: "1:08:33", // Petz Bunnyz
