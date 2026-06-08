@@ -3,26 +3,24 @@
  * @type {Object.<number, string>}
  */
 const ACTUAL_TIMES = {
-    330: "12:03:03", // Tamagotchi
-    331: "10:50:06", // Conquest
-    332: "9:54:42", // BoPoP
-    333: "4:10:32", // CoD
-    334: "48:54:50", // DQ IX
-    335: "3:34:44", // Brain Age
-    336: "2:24:43", // New Zealand
-    337: "3:24:33", // Tornado
-    338: "7:54:30", // Power Rangers
-    339: "1:28:19", // Space Camp
-    340: "39:59:32", // Suikoden
-    341: "15:24:51", // Ant Nation
-    342: "2:38:25", // Family Feud
-    343: "3:43:25", // Imagine Salon Stylist
-    344: "5:00:34", // Dark Souls
-    345: "31:34:42", // Heartgold
-    346: "3:33:01", // River City
-    347: "0:52:14", // Driver's Ed
-    348: "1:08:33", // Petz Bunnyz
-    349: "4:42:24", // Spelling
-    350: "1:22:43", // Sudoku
-    /*351: "" // Dokapon */
+    352: "1:33:14", // Johnny Test
+    353: "1:19:59", // Natasha
+    354: "2:45:48", // Taz Ball
+    355: "9:39:54", // Jake Hunter
+    356: "0:44:31", // Frisbee
+    357: "2:47:07", // Globetrotters
+    358: "21:21:14", // Okamiden
+//    359: "", // Tony Hawk
+    360: "2:01:24", // Imagine Reporter
+    361: "7:12:02", // Horsez
+    362: "4:19:43", // SNOOD 2
+//    363: "", // Petz Nursery 2
+    364: "63:03:11", // SMT
+    365: "4:54:59", // Rabbids
+//    366: "", // Mega Man ZX
+    367: "1:24:19", // MX ATV
+    368: "0:23:59", // Backyard
+    369: "5:03:55", // HORSE LIFE
+    370: "2:52:12", // shining stars
+//    371: "", // Final Fantasy
 };
