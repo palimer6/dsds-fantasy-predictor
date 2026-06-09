@@ -10,7 +10,7 @@ const ACTUAL_TIMES = {
     356: "0:44:31", // Frisbee
     357: "2:47:07", // Globetrotters
     358: "21:21:14", // Okamiden
-//    359: "", // Tony Hawk
+    359: "03:37:30", // Tony Hawk
     360: "2:01:24", // Imagine Reporter
     361: "7:12:02", // Horsez
     362: "4:19:43", // SNOOD 2
